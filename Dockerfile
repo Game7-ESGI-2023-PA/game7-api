@@ -82,16 +82,13 @@ ENV PATH="${PATH}:/root/.composer/vendor/bin"
 COPY --from=composer --link /composer /usr/bin/composer
 
 # prevent the reinstallation of vendors at every changes in the source code
+# TODO: manage --no-dev
 COPY --link composer.* symfony.* ./
 RUN set -eux; \
     if [ -f composer.json ]; then \
-    	if [ "$BUILD_ENV" == "test"]; then \
-			composer install --prefer-dist --no-autoloader --no-scripts --no-progress; \
-    	else \
-			composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress; \
-    	fi \
-    fi \
+		composer install --prefer-dist --no-autoloader --no-scripts --no-progress; \
 		composer clear-cache; \
+    fi \
 
 # copy sources
 COPY --link  . ./
