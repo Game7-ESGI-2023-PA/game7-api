@@ -53,5 +53,7 @@ jobs:
             run: docker compose up --build -d
           - name: Copy .env.test.local
             run: docker compose exec php php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
+          - name: Install Dev Dependencies
+            run: docker compose exec php composer install
           - name: Execute tests (Unit and Feature tests) via PHPUnit
-            run: docker compose exec php ls /srv/app/vendor/bin/
+            run: docker compose exec php /srv/app/vendor/bin/phpunit
