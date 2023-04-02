@@ -50,10 +50,8 @@ jobs:
           - name: Pull images
             run: docker compose pull
           - name: Start services
-            run: docker compose up --build -d
+            run: docker compose up --build -d --build-arg BUILD_ENV=test
           - name: Copy .env.test.local
             run: docker compose exec php php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
-          - name: Install Dev Dependencies
-            run: rm -rf /srv/app/vendor && rm -rf /srv/var && docker compose exec php composer install
           - name: Execute tests (Unit and Feature tests) via PHPUnit
             run: docker compose exec php /srv/app/vendor/bin/phpunit

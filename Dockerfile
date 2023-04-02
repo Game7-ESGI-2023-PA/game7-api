@@ -29,6 +29,7 @@ ENV STABILITY ${STABILITY}
 ARG SYMFONY_VERSION=""
 ENV SYMFONY_VERSION ${SYMFONY_VERSION}
 
+ARG BUILD_ENV=prod
 ENV APP_ENV=prod
 
 WORKDIR /srv/app
@@ -84,9 +85,13 @@ COPY --from=composer --link /composer /usr/bin/composer
 COPY --link composer.* symfony.* ./
 RUN set -eux; \
     if [ -f composer.json ]; then \
-		composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress; \
+    	if [ "$BUILD_ENV" == "test"]; then \
+			composer install --prefer-dist --no-autoloader --no-scripts --no-progress; \
+    	else \
+			composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress; \
+    	fi \
+    fi \
 		composer clear-cache; \
-    fi
 
 # copy sources
 COPY --link  . ./
