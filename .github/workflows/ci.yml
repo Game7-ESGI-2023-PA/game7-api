@@ -45,13 +45,13 @@ jobs:
       name: Symfony Test 
       runs-on: ubuntu-latest
       steps:
-        - name: Checkout
-        - uses: actions/checkout@v3
-        - name: Pull images
-          run: docker compose pull
-        - name: Start services
-          run: docker compose up --build -d
-        - name: Copy .env.test.local
-          run: docker compose exec php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
-        - name: Execute tests (Unit and Feature tests) via PHPUnit
-          run: docker compose exec php vendor/bin/phpunit
+          - name: Checkout
+            uses: actions/checkout@v3
+          - name: Pull images
+            run: docker compose pull
+          - name: Start services
+            run: docker compose up --build -d
+          - name: Copy .env.test.local
+            run: docker compose exec php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
+          - name: Execute tests (Unit and Feature tests) via PHPUnit
+            run: docker compose exec php vendor/bin/phpunit
