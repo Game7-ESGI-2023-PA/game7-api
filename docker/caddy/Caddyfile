@@ -3,7 +3,7 @@
     {$CADDY_DEBUG}
 }
 
-{$SERVER_NAME}
+api.game7app.com
 
 {$CADDY_EXTRA_CONFIG}
 

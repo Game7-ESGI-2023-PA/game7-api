@@ -85,7 +85,7 @@ COPY --from=composer --link /composer /usr/bin/composer
 COPY --link composer.* symfony.* ./
 RUN set -eux; \
     if [ -f composer.json ]; then \
-    	if [ "$BUILD_ENV" == "test"]; then \
+    	if [ "$BUILD_ENV" == "test" ]; then \
 			composer install --prefer-dist --no-autoloader --no-scripts --no-progress; \
 			composer clear-cache; \
     	else \
