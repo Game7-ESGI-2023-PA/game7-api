@@ -4,6 +4,7 @@
 }
 
 api.game7app.com
+localhost
 
 {$CADDY_EXTRA_CONFIG}
 
