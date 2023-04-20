@@ -12,6 +12,12 @@ A [Docker](https://www.docker.com/)-based installer and runtime for the [Symfony
 4. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
 5. Run `docker compose down --remove-orphans` to stop the Docker containers.
 
+## Guide to use php console
+
+1. First you need to be sure the php container is running
+2. Go inside the container : `docker exec -it <container_name> /bin/sh`
+3. Inside the container you'll be able to use the commands `php bin/console <command>`
+
 ## Features
 
 * Production, development and CI ready
