@@ -1,9 +1,10 @@
-name: Deploy to EC2
+name: deploy
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["push-to-registry"]
+    types:
+      - completed
 
 jobs:
   deploy:
