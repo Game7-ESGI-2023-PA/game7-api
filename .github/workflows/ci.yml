@@ -16,7 +16,7 @@ jobs:
                 dockerfile: Dockerfile
                 ignore: DL3007,DL3018 # Ignore using latest on mlocati/php-extension-installer & version in apk add
     build:
-        name: Docker build
+        name: Docker build and test
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -24,7 +24,7 @@ jobs:
             - name: Pull images
               run: docker compose pull
             - name: Start services # Use test database image when unit tests needs database
-              run: docker compose up php caddy --build -d
+              run: docker compose up --build -d
             - name: Wait for services
               run: |
                   while status="$(docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" "$(docker compose ps -q php)")"; do
@@ -39,30 +39,7 @@ jobs:
               run: curl http://localhost
             - name: Check HTTPS reachability
               run: curl -k https://localhost
-
-    tests:
-      name: Symfony Test 
-      runs-on: ubuntu-latest
-      steps:
-          - name: Checkout
-            uses: actions/checkout@v3
-          - name: Pull images
-            run: docker compose pull
-          - name: Build images
-            run: docker compose build --build-arg BUILD_ENV=test
-          - name: Run images
-            run: docker compose up -d
-          - name: Wait for services
-            run: |
-                while status="$(docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" "$(docker compose ps -q php)")"; do
-                  case $status in
-                    starting) sleep 1;;
-                    healthy) exit 0;;
-                    unhealthy) exit 1;;
-                  esac
-                done
-                exit 1
-          - name: Copy .env.test.local
-            run: docker compose exec php php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
-          - name: Execute tests (Unit and Feature tests) via PHPUnit
-            run: docker compose exec php /srv/app/vendor/bin/phpunit
+            - name: Copy .env.test.local
+              run: docker compose exec php php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
+            - name: Execute tests (Unit and Feature tests) via PHPUnit
+              run: docker compose exec php /srv/app/vendor/bin/phpunit
