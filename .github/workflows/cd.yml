@@ -20,7 +20,7 @@ jobs:
         
       - name: Copy repository to EC2
         run: |
-          scp -i private_key.pem -o StrictHostKeyChecking=no -rf ./ ${{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }}:/home/${{ vars.SERVER_USER }}/game7-api/
+          scp -i private_key.pem -rf ./ ${{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }}:/home/${{ vars.SERVER_USER }}/game7-api/
 
       - name: Build and run Docker container on EC2 instance
         run: |
