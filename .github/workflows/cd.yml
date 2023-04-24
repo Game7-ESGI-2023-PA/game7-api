@@ -17,9 +17,12 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
-        
+      - name: Copy deploy script
+        run: |
+          scp -i private_key.pem ictHostKeyChecking=no ./start_prod.sh ${{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }}:~/start_prod.sh
+      
       - name: Build and run Docker container on EC2 instance
         run: |
           ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }} "\
-            rm -rf game7-api && git clone git@github.com:Game7-ESGI-2023-PA/game7-api.git && chmod u+x ./start_prod.sh && ./start_prod.sh ${{ secrets.APP_SECRET }} ${{ secrets.DATABASE_URL }} ${{ vars.SERVER_NAME }}"
+            chmod u+x ./start_prod.sh && ./start_prod.sh ${{ secrets.APP_SECRET }} ${{ secrets.DATABASE_URL }} ${{ vars.SERVER_NAME }} "
         
