@@ -22,4 +22,4 @@ jobs:
         run: |
           ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@${{ vars.SERVER_PUBLIC_IP }} "\
             ls && \
-            pwd
+            pwd "
