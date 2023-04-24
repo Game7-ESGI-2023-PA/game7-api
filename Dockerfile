@@ -92,7 +92,6 @@ RUN set -eux; \
     if [ -f composer.json ]; then \
 		composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress; \
 		composer clear-cache; \
-       fi \
     fi
 
 # copy sources
