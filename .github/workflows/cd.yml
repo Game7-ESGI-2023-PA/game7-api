@@ -21,8 +21,6 @@ jobs:
       - name: Build and run Docker container on EC2 instance
         run: |
           ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }} "\
-            eval \"$(ssh-agent -s)\" && \
-            ssh-add ~/.ssh/id_ed25519 && \
             git-force-clone git@github.com:Game7-ESGI-2023-PA/game7-api.git game7-api && \
             ./start_prod.sh ${{ secrets.APP_SECRET }} ${{ secrets.DATABASE_URL }}"
         
