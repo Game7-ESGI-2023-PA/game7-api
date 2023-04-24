@@ -1,12 +1,12 @@
 #!/bin/bash
 
-if [ $# -ne 2 ]; then
-    echo "Error: Please provide APP_SECRET and DATABASE_URL as parameters."
+if [ $# -ne 3 ]; then
+    echo "Error: Please provide APP_SECRET, DATABASE_URL and GIT_SSH_PASSPHRASE a as parameters."
     exit 1
 fi
 
 eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
+ssh-add ~/.ssh/id_ed25519 -p "$3"
 
 if [ -d "game7-api" ]; then
     cd game7-api || return
