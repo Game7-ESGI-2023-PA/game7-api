@@ -19,7 +19,7 @@ jobs:
           chmod 600 private_key.pem
       - name: Copy deploy script
         run: |
-          scp -i private_key.pem ictHostKeyChecking=no ./start_prod.sh ${{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }}:~/start_prod.sh
+          scp -i private_key.pem -o StrictHostKeyChecking=no ./start_prod.sh ${{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }}:~/start_prod.sh
       
       - name: Build and run Docker container on EC2 instance
         run: |
