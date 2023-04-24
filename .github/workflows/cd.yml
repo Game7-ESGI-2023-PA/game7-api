@@ -20,6 +20,6 @@ jobs:
 
       - name: Build and run Docker container on EC2 instance
         run: |
-          ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@${{ vars.SERVER_PUBLIC_IP }} "\
+          ssh -i private_key.pem -o StrictHostKeyChecking=no {{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }} "\
             ls && \
             pwd "
