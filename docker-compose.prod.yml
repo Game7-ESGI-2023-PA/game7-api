@@ -7,4 +7,7 @@ services:
       APP_SECRET: ${APP_SECRET}
       DATABASE_URL: ${DATABASE_URL}
       CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN}
+  caddy:
+    environment:
+      SERVER_NAME: ${SERVER_NAME}
       

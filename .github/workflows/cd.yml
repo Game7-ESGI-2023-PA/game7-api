@@ -25,5 +25,5 @@ jobs:
       - name: Build and run Docker container on EC2 instance
         run: |
           ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }} "\
-            game7-api && chmod u+x ./start_prod.sh && ./start_prod.sh ${{ secrets.APP_SECRET }} ${{ secrets.DATABASE_URL }}"
+            game7-api && chmod u+x ./start_prod.sh && ./start_prod.sh ${{ secrets.APP_SECRET }} ${{ secrets.DATABASE_URL }} ${{ vars.SERVER_NAME }}"
         
