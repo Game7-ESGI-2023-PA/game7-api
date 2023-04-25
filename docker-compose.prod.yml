@@ -4,7 +4,7 @@ version: "3.4"
 services:
   php:
     env_file:
-      - .env.prod.local
+      - ./.env.prod.local
     environment:
       APP_SECRET: ${APP_SECRET}
       DATABASE_URL: ${DATABASE_URL}
@@ -14,6 +14,6 @@ services:
       
   caddy:
     env_file:
-      - .env.prod.local
+      - ./.env.prod.local
     environment:
       SERVER_NAME: 'localhost, api.game7app.com, 54.174.176.86,'
