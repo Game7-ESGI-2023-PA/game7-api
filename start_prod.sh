@@ -17,4 +17,6 @@ DATABASE_URL=$2 \
 CORS_ALLOW_ORIGIN='*' \
 sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy database -d --build
 
-exit 0
+exit_status=$?
+echo "Docker compose exit status: $exit_status"
+exit $exit_status
