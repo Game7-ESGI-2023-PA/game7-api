@@ -1,10 +1,9 @@
 name: deploy
 
 on:
-  workflow_run:
-    workflows: ["push-to-registry"]
-    types:
-      - completed
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -18,9 +17,16 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
-
-      - name: Build and run Docker container on EC2 instance
+      - name: Copy deploy script
         run: |
-          ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@${{ vars.SERVER_PUBLIC_IP }} "\
-            ls && \
-            pwd
+          scp -i private_key.pem -o StrictHostKeyChecking=no ./start_prod.sh ${{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }}:~/start_prod.sh
+
+      - name: Make script executable
+        run: |
+          ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }} "\
+            chmod u+x ./start_prod.sh"
+
+      - name: Execute script
+        run: |
+          ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }} "\
+            ./start_prod.sh"

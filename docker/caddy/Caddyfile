@@ -11,6 +11,7 @@ log
 
 route {
     root * /srv/app/public
+    vulcain
     mercure {
         # Transport to use (default to Bolt)
         transport_url {$MERCURE_TRANSPORT_URL:bolt:///data/mercure.db}
@@ -25,7 +26,6 @@ route {
         # Extra directives
         {$MERCURE_EXTRA_DIRECTIVES}
     }
-    vulcain
     php_fastcgi unix//var/run/php/php-fpm.sock
     encode zstd gzip
     file_server

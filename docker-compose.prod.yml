@@ -5,9 +5,11 @@ services:
   php:
     environment:
       APP_SECRET: ${APP_SECRET}
-      MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET}
-
+      DATABASE_URL: ${DATABASE_URL}
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN}
+      APP_ENV: ${APP_ENV}
+      # TODO: add jwt keys
+      
   caddy:
     environment:
-      MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
-      MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
+      SERVER_NAME: 'localhost, api.game7app.com, 54.174.176.86,'
