@@ -11,13 +11,14 @@ else
 	git clone git@github.com:Game7-ESGI-2023-PA/game7-api.git
 	cd game7-api || return
 fi
-
-export APP_SECRET=$1
-export DATABASE_URL=$2
-export CORS_ALLOW_ORIGIN='*'
-
-sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy database --build -d
+APP_SECRET=$1 \
+DATABASE_URL=$2 \
+CORS_ALLOW_ORIGIN='*' \
+sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy -d --build
 
 exit_status=$?
 echo "Docker compose exit status: $exit_status"
-return $exit_status
+
+echo "$1"
+
+exit $exit_status
