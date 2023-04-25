@@ -14,6 +14,5 @@ fi
 
 APP_SECRET=$1 \
 DATABASE_URL=$2 \
-SERVER_NAME=api.game7app.com \
 CORS_ALLOW_ORIGIN='*' \
 sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy -d --build
