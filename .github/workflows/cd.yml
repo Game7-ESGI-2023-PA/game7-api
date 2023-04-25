@@ -29,7 +29,4 @@ jobs:
       - name: Execute script
         run: |
           ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }} "\
-            ./start_prod.sh ${{ secrets.APP_SECRET }} ${{ secrets.DATABASE_URL }} ${{ vars.SERVER_NAME }}; \
-            exit_status=\$?; \
-            echo \"Exit status: \$exit_status\"; \
-            exit \$exit_status"
+            ./start_prod.sh ${{ secrets.APP_SECRET }} ${{ secrets.DATABASE_URL }}"
