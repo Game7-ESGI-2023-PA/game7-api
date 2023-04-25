@@ -27,6 +27,9 @@ jobs:
             chmod u+x ./start_prod.sh"
 
       - name: Execute script
+        env:
+          APP_SECRET: "${{ secrets.APP_SECRET }}"
+          DATABASE_URL: "${{ secrets.DATABASE_URL }}"
         run: |
           ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }} "\
-            ./start_prod.sh ${{ secrets.APP_SECRET }} ${{ secrets.DATABASE_URL }}"
+            ./start_prod.sh ${APP_SECRET} ${DATABASE_URL}"
