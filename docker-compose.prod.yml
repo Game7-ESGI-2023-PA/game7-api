@@ -11,4 +11,4 @@ services:
       
   caddy:
     environment:
-      SERVER_NAME: 'localhost, api.game7.com, 54.174.176.86,'
+      SERVER_NAME: 'localhost, api.game7app.com, 54.174.176.86,'
