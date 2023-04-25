@@ -12,12 +12,10 @@ else
 	cd game7-api || return
 fi
 
-sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml build php caddy database
-
 APP_SECRET=$1 \
 DATABASE_URL=$2 \
 CORS_ALLOW_ORIGIN='*' \
-sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy database -d
+sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy database --build
 
 exit_status=$?
 echo "Docker compose exit status: $exit_status"
