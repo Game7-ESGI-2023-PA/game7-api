@@ -23,10 +23,8 @@ else
     cd game7-api || return
 fi
 
-export APP_SECRET="$APP_SECRET"
-export DATABASE_URL="$DATABASE_URL"
-export CORS_ALLOW_ORIGIN='*'
-sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy -d --build
+sudo APP_SECRET="$APP_SECRET" DATABASE_URL="$DATABASE_URL" CORS_ALLOW_ORIGIN='*' docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy -d --build
+
 
 exit_status=$?
 echo "Docker compose exit status: $exit_status"
