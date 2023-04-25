@@ -15,4 +15,4 @@ fi
 APP_SECRET=$1 \
 DATABASE_URL=$2 \
 CORS_ALLOW_ORIGIN='*' \
-sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy database --build
+sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy database -d --build
