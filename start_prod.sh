@@ -12,10 +12,7 @@ else
 	cd game7-api || return
 fi
 
-APP_SECRET > secret.txt
-DATABASE_URL > db_url.txt
-
 APP_SECRET=$1 \
 DATABASE_URL=$2 \
 CORS_ALLOW_ORIGIN='*' \
-sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy -d --build
+sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy  --build
