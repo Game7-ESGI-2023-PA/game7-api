@@ -29,7 +29,7 @@ else
 fi
 
 # Pass the temporary environment file to the Docker Compose command
-sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml --env-file temp_env up php caddy -d --build
+sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml --env-file ../temp_env up php caddy -d --build
 
 exit_status=$?
 echo "Docker compose exit status: $exit_status"
