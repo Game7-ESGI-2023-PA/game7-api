@@ -19,6 +19,4 @@ sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up php cadd
 exit_status=$?
 echo "Docker compose exit status: $exit_status"
 
-echo "$1"
-
 exit $exit_status
