@@ -16,7 +16,7 @@ export APP_SECRET=$1
 export DATABASE_URL=$2
 export CORS_ALLOW_ORIGIN='*'
 
-sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy database --build
+sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy database --build -d
 
 exit_status=$?
 echo "Docker compose exit status: $exit_status"
