@@ -27,23 +27,20 @@ services:
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
 
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-15}-alpine
+  mongodb:
+    # In production, you may want to use a managed database service
+    image: mongo
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
+      - MONGO_INITDB_DATABASE=user
+      - MONGO_INITDB_ROOT_USERNAME=admin
       # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
+      - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
-      - database_data:/var/lib/postgresql/data:rw
+      - db-data:/data/db:rw
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
+      # - ./docker/db/data:/data/db:rw
     ports:
-      - "5432"
-###< doctrine/doctrine-bundle ###
+      - "27017:27017"
 
 volumes:
-  ###> doctrine/doctrine-bundle ###
-  database_data:
-  ###< doctrine/doctrine-bundle ###
+  db-data:
