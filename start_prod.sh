@@ -11,7 +11,7 @@ MONGODB_DB_NAME="game7-mongo-dbname"
 JWT_PASSPHRASE_NAME="game7-jwt-passphrase"
 
 APP_SECRET=$(aws secretsmanager get-secret-value --secret-id "$APP_SECRET_NAME" --query 'SecretString' --output text)
-MONGODB_URL=$(aws secretsmanager get-secret-value --secret-id "$DATABASE_URL_NAME" --query 'SecretString' --output text)
+MONGODB_URL=$(aws secretsmanager get-secret-value --secret-id "$MONGODB_URL_NAME" --query 'SecretString' --output text)
 MONGODB_DB=$(aws secretsmanager get-secret-value --secret-id "$MONGODB_DB_NAME" --query 'SecretString' --output text)
 JWT_PASSPHRASE=$(aws secretsmanager get-secret-value --secret-id "$JWT_PASSPHRASE_NAME" --query 'SecretString' --output text)
 
