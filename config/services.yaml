@@ -19,13 +19,12 @@ services:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
-            - '../src/Entity/'
+            - '../src/Document/'
             - '../src/Kernel.php'
-
-#    
-#    App\State\UserPasswordHasher:
-#        bind:
-#            $processor: '@api_platform.doctrine.orm.state.persist_processor'
+    
+    App\State\UserPasswordHasher:
+        bind:
+            $processor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
