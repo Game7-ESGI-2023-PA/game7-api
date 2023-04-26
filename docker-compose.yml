@@ -17,8 +17,8 @@ services:
       retries: 3
       start_period: 30s
     environment:
-      # Run "composer require symfony/orm-pack" to install and configure Doctrine ORM
-      DATABASE_URL: ${DATABASE_URL:-postgresql://app:password@database:5432/app?serverVersion=15&charset=utf8}
+      MONGODB_URL: ${MONGODB_URL:-mongodb://admin:password@mongodb:27017}
+      MONGODB_DB: ${MONGODB_DB:-game7}
       
   caddy:
     build:

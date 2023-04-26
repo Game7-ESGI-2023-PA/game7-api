@@ -5,10 +5,9 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
-            entity:
-                class: App\Entity\User
-                property: email
+        my_mongo_provider:
+            mongodb: { class: App\Document\User, property: email }
+    
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -16,11 +15,11 @@ security:
         api:
             pattern: ^/api/
             stateless: true
-            provider: app_user_provider
+            provider: my_mongo_provider
             jwt: ~
         main:
             lazy: true
-            provider: app_user_provider
+            provider: my_mongo_provider
             stateless: true
             json_login:
                 check_path: /auth # The name in routes.yaml is enough for mapping

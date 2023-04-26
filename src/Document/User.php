@@ -1,59 +1,49 @@
 <?php
-# api/src/Entity/User.php
 
-namespace App\Entity;
+namespace App\Document;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
-use Doctrine\ORM\Mapping as ORM;
-use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
         new GetCollection(),
         new Post(
-            processor: UserPasswordHasher::class, 
+            uriTemplate: 'register',
             validationContext: ['groups' => ['Default', 'user:create']],
-            uriTemplate: 'register'
+            processor: UserPasswordHasher::class
         ),
         new Get(),
         new Patch(processor: UserPasswordHasher::class),
         new Delete(),
     ],
-    normalizationContext: ['groups' => ['user:read']], 
+    normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:create', 'user:update']],
 )]
-#[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
-#[UniqueEntity('email')]
+#[ODM\Document]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Groups(['user:read'])]
-    #[ORM\Id]
-    #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue]
-    private ?int $id = null;
+    #[ODM\Id]
+    private ?string $id = null;
 
     #[Assert\NotBlank]
     #[Assert\Email]
     #[Groups(['user:read', 'user:create', 'user:update'])]
-    #[ORM\Column(length: 180, unique: true)]
+    #[ODM\Field]
     private ?string $email = null;
 
-    #[ORM\Column]
+    #[ODM\Field]
     private ?string $password = null;
 
     #[Assert\NotBlank(groups: ['user:create'])]
@@ -61,10 +51,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $plainPassword = null;
 
     #[Groups(['user:read'])]
-    #[ORM\Column(type: 'json')]
+    #[ODM\Field(type: 'collection')]
     private array $roles = [];
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }

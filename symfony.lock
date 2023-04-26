@@ -48,6 +48,19 @@
             "migrations/.gitignore"
         ]
     },
+    "doctrine/mongodb-odm-bundle": {
+        "version": "4.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "4.4",
+            "ref": "a6bc3544da98c97b2eafb2ef1e86bcc8093d96cf"
+        },
+        "files": [
+            "config/packages/doctrine_mongodb.yaml",
+            "src/Document/.gitignore"
+        ]
+    },
     "lexik/jwt-authentication-bundle": {
         "version": "2.18",
         "recipe": {
