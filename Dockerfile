@@ -106,11 +106,6 @@ RUN set -eux; \
 		chmod +x bin/console; sync; \
     fi
 
-RUN set -eux; \
-    bin/console lexik:jwt:generate-keypair --overwrite; \
-    setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt; \
-    setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt; \
-
 # Dev image
 FROM app_php AS app_php_dev
 
