@@ -19,7 +19,7 @@ class MyReceivedFriendRequest extends AbstractController
     public function __invoke(): array
     {
         $currentUser = $this->security->getUser();
-        $dm = $this->documentManager->getRepository(FriendRequest::class);
-        return $dm->findBy(['to' => $currentUser->getUserIdentifier()]);
+        $repo = $this->documentManager->getRepository(FriendRequest::class);
+        return $repo->findBy(['to' => $currentUser->getUserIdentifier()]);
     }
 }

@@ -5,8 +5,11 @@ namespace App\Document;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Controller\FriendRequest\MyReceivedFriendRequest;
+use App\Exception\FriendRequestInvalidException;
 use App\Repository\FriendRequestRepository;
+use App\State\FriendRequestCreator;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -15,9 +18,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new GetCollection(
             uriTemplate: '/friend_requests/my_received',
             controller: MyReceivedFriendRequest::class,
-            paginationEnabled: false,
+            paginationEnabled: false
         ),
-
+        new Post(
+            exceptionToStatus: [FriendRequestInvalidException::class => 400],
+            processor: FriendRequestCreator::class
+        ),
     ],
     normalizationContext: ['groups' => ['friendRequest:read', 'friendRequest:read']],
     denormalizationContext: ['groups' => ['friendRequest:write']]
@@ -28,7 +34,7 @@ class FriendRequest
     #[ODM\Id]
     private ?string $id = null;
 
-    #[Groups(['friendRequest:read', 'friendRequest:write'])]
+    #[Groups(['friendRequest:read'])]
     #[ApiProperty(
         example: '/api/users/{userId}',
     )]
@@ -42,7 +48,7 @@ class FriendRequest
     )]
     private User $to;
 
-    #[Groups(['friendRequest:read', 'friendRequest:write'])]
+    #[Groups(['friendRequest:read'])]
     #[ODM\Field(type: 'string')]
     private string $status;
 
