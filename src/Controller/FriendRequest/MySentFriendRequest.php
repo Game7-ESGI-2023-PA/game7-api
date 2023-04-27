@@ -9,8 +9,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class MyReceivedFriendRequest extends AbstractController
+class MySentFriendRequest extends AbstractController
 {
+
     public function __construct(
         private readonly Security $security,
         private readonly DocumentManager $documentManager
@@ -20,6 +21,6 @@ class MyReceivedFriendRequest extends AbstractController
     {
         $currentUser = $this->security->getUser();
         $repo = $this->documentManager->getRepository(FriendRequest::class);
-        return $repo->findBy(['to' => $currentUser]);
+        return $repo->findBy(['from' => $currentUser]);
     }
 }

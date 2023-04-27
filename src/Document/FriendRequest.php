@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Controller\FriendRequest\MyReceivedFriendRequest;
+use App\Controller\FriendRequest\MySentFriendRequest;
 use App\Exception\FriendRequestInvalidException;
 use App\Repository\FriendRequestRepository;
 use App\State\FriendRequestCreator;
@@ -16,8 +17,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new GetCollection(
-            uriTemplate: '/friend_requests/my_received',
+            uriTemplate: 'my_received/friend_requests/',
             controller: MyReceivedFriendRequest::class,
+            paginationEnabled: false
+        ),
+        new GetCollection(
+            uriTemplate: 'my_sent/friend_requests',
+            controller: MySentFriendRequest::class,
             paginationEnabled: false
         ),
         new Post(
