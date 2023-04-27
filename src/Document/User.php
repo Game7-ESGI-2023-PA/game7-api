@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -17,29 +18,29 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
+        new Get(),
         new GetCollection(),
         new Post(
             uriTemplate: 'register',
             validationContext: ['groups' => ['Default', 'user:create']],
             processor: UserPasswordHasher::class
         ),
-        new Get(),
         new Patch(processor: UserPasswordHasher::class),
         new Delete(),
     ],
     normalizationContext: ['groups' => ['user:read']],
-    denormalizationContext: ['groups' => ['user:create', 'user:update']],
+    denormalizationContext: ['groups' => ['user:create', 'user:update']]
 )]
-#[ODM\Document]
+#[ODM\Document(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'friendRequest:read'])]
     #[ODM\Id]
     private ?string $id = null;
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user:read', 'user:create', 'user:update'])]
+    #[Groups(['user:read', 'user:create', 'user:update', 'friendRequest:read'])]
     #[ODM\Field]
     private ?string $email = null;
 
@@ -50,7 +51,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:create', 'user:update'])]
     private ?string $plainPassword = null;
 
-    #[Groups(['user:read'])]
     #[ODM\Field(type: 'collection')]
     private array $roles = [];
 
@@ -124,12 +124,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string) $this->id;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
         $this->plainPassword = null;
