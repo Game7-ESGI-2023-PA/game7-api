@@ -3,17 +3,15 @@
 namespace App\Document;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
-use App\State\UserPasswordHasher;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\State\User\UserPasswordHasher;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 # TODO: rechercher un user
@@ -35,13 +33,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ODM\Document(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[Groups(['user:read', 'friendRequest:read'])]
+    #[Groups(['user:read', 'friendRequest:read', 'friendship:read'])]
     #[ODM\Id]
     private ?string $id = null;
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user:read', 'user:create', 'user:update', 'friendRequest:read'])]
+    #[Groups(['user:read', 'user:create', 'user:update', 'friendRequest:read', 'friendship:read'])]
     #[ODM\Field]
     private ?string $email = null;
 
@@ -55,12 +53,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ODM\Field(type: 'collection')]
     private array $roles = [];
 
-    #[ODM\ReferenceMany(targetDocument: User::class)]
-    private ArrayCollection $friends;
-
-    public function __construct(){
-        $this->friends = new ArrayCollection();
-    }
+//    #[Groups(['user:read'])]
+//    #[ODM\ReferenceMany(targetDocument: User::class)]
+//    private ArrayCollection $friends;
 
     public function getId(): ?string
     {
@@ -138,27 +133,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         $this->plainPassword = null;
-    }
-
-
-    public function getFriends(): ArrayCollection
-    {
-        return $this->friends;
-    }
-
-    public function addFriends(User $user): self
-    {
-        if (!$this->friends->contains($user)) {
-            $this->friends[] = $user;
-        }
-
-        return $this;
-    }
-
-    public function removeObjet(User $user): self
-    {
-        $this->friends->removeElement($user);
-
-        return $this;
     }
 }

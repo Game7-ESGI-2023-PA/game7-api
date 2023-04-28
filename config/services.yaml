@@ -22,7 +22,7 @@ services:
             - '../src/Document/'
             - '../src/Kernel.php'
     
-    App\State\UserPasswordHasher:
+    App\State\User\UserPasswordHasher:
         bind:
             $processor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
             

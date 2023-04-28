@@ -4,6 +4,7 @@ namespace App\State\FriendRequest;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
+use App\Document\Friendship;
 use App\Document\User;
 use App\Exception\FriendRequestException;
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -25,7 +26,6 @@ class FriendRequestAnswerProcessor implements ProcessorInterface
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
-        $sentStatus = $data->getStatus();
         $currentUser = $this->security->getUser();
         if($data->getTo() != $currentUser ) {
             throw new FriendRequestException('the answerer needs to be the receiver of the request');
@@ -43,10 +43,14 @@ class FriendRequestAnswerProcessor implements ProcessorInterface
      */
     private function addFriend(User $user,User $friend): void
     {
-        $repo = $this->documentManager->getRepository(User::class);
-
-        $user->addFriends($friend);
-        $this->documentManager->persist($user);
+        $friendshipRepository = $this->documentManager->getRepository(Friendship::class);
+        $friendship = $friendshipRepository->findOneBy(['user' => $user]);
+        if(is_null($friendship)){
+            $friendship = new Friendship();
+            $friendship->setUser($user);
+        }
+        $friendship->addFriends($friend);
+        $this->documentManager->persist($friendship);
         $this->documentManager->flush();
     }
 }
