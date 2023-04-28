@@ -59,10 +59,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ODM\Field(type: 'collection')]
     private array $roles = [];
 
-//    #[Groups(['user:read'])]
-//    #[ODM\ReferenceMany(targetDocument: User::class)]
-//    private ArrayCollection $friends;
-
     public function getId(): ?string
     {
         return $this->id;
