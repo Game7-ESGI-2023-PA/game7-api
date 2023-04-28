@@ -21,17 +21,12 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        api:
-            pattern: ^/api/
-            stateless: true
-            provider: my_mongo_provider
-            jwt: ~
         main:
             lazy: true
             provider: email_my_mongo_provider
             stateless: true
             json_login:
-                check_path: /auth # The name in routes.yaml is enough for mapping
+                check_path: /api/auth # The name in routes.yaml is enough for mapping
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -44,6 +39,11 @@ security:
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
+        api:
+            pattern: ^/api/
+            stateless: true
+            provider: my_mongo_provider
+            jwt: ~
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:

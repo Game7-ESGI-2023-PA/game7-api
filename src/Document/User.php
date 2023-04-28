@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
+use App\State\User\CurrentUserProvider;
 use App\State\User\UserPasswordHasher;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -19,7 +20,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new Get(),
-        new GetCollection(), # TODO apply filter for search
+        new Get(
+            uriTemplate: 'me',
+            provider: CurrentUserProvider::class
+        ),
+        new GetCollection(),
         new Post(
             uriTemplate: 'register',
             validationContext: ['groups' => ['Default', 'user:create']],
@@ -62,6 +67,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?string
     {
         return $this->id;
+    }
+
+    public function getNickname(): ?string
+    {
+        return $this->nickname;
+    }
+
+    public function setNickname(?string $nickname): void
+    {
+        $this->nickname = $nickname;
     }
 
     public function getEmail(): ?string
