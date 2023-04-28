@@ -26,11 +26,11 @@ services:
         bind:
             $processor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
             
-    App\State\FriendRequestCreator:
+    App\State\FriendRequest\FriendRequestCreationProcessor:
         bind:
             $processor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
             
-    App\State\FriendRequestAnswer:
+    App\State\FriendRequest\FriendRequestAnswerProcessor:
         bind:
             $processor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
 

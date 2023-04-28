@@ -1,6 +1,6 @@
 <?php
 
-namespace App\State;
+namespace App\State\FriendRequest;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
@@ -9,7 +9,7 @@ use App\Exception\FriendRequestException;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class FriendRequestCreator implements ProcessorInterface
+class FriendRequestCreationProcessor implements ProcessorInterface
 {
 
     public function __construct(
