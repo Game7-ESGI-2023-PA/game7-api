@@ -7,12 +7,12 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Controller\FriendRequest\MyReceivedFriendRequest;
-use App\Controller\FriendRequest\MySentFriendRequest;
 use App\Exception\FriendRequestException;
 use App\Repository\FriendRequestRepository;
-use App\State\FriendRequestAnswer;
-use App\State\FriendRequestCreator;
+use App\State\FriendRequest\FriendRequestAnswerProcessor;
+use App\State\FriendRequest\FriendRequestCreationProcessor;
+use App\State\FriendRequest\MyReceivedFriendRequestProvider;
+use App\State\FriendRequest\MySentFriendRequestProvider;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -21,22 +21,22 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new GetCollection(
             uriTemplate: 'me/received/friend_requests/',
-            controller: MyReceivedFriendRequest::class,
-            paginationEnabled: false
+            paginationEnabled: false,
+            provider: MyReceivedFriendRequestProvider::class
         ),
         new GetCollection(
             uriTemplate: 'me/sent/friend_requests/',
-            controller: MySentFriendRequest::class,
-            paginationEnabled: false
+            paginationEnabled: false,
+            provider: MySentFriendRequestProvider::class
         ),
         new Post(
             exceptionToStatus: [FriendRequestException::class => 400],
-            processor: FriendRequestCreator::class
+            processor: FriendRequestCreationProcessor::class
         ),
         new Put(
             uriTemplate: '/friend_requests/{id}/answer/',
             denormalizationContext: ['groups' => 'friendRequest:answer'],
-            processor: FriendRequestAnswer::class
+            processor: FriendRequestAnswerProcessor::class
         )
     ],
     normalizationContext: ['groups' => ['friendRequest:read']],
