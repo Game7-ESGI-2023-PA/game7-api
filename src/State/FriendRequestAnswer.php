@@ -4,18 +4,15 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
-use App\Document\FriendRequest;
 use App\Exception\FriendRequestException;
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class FriendRequestCreator implements ProcessorInterface
+class FriendRequestAnswer implements ProcessorInterface
 {
 
     public function __construct(
         private readonly ProcessorInterface $processor,
         private readonly Security $security,
-        private readonly DocumentManager $documentManager
     ){}
 
     /**
@@ -23,17 +20,13 @@ class FriendRequestCreator implements ProcessorInterface
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
+        $sentStatus = $data->getStatus();
         $currentUser = $this->security->getUser();
-        $data->setFrom($currentUser);
-
-        if($data->getTo() == $currentUser){
-            throw new FriendRequestException('Cannot send friend request to yourself');
+        if($data->getTo() != $currentUser ) {
+            throw new FriendRequestException('the answerer needs to be the receiver of the request');
         }
 
-        $repo = $this->documentManager->getRepository(FriendRequest::class);
-        if($repo->isFriendRequestExisting($currentUser, $data->getTo())){
-            throw new FriendRequestException('A friend request with this users already exists (accepted or pending)');
-        }
+        # TODO: can't change status if actual already accepted or refused
 
         $this->processor->process($data, $operation, $uriVariables, $context);
     }

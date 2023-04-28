@@ -29,6 +29,10 @@ services:
     App\State\FriendRequestCreator:
         bind:
             $processor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
+            
+    App\State\FriendRequestAnswer:
+        bind:
+            $processor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
