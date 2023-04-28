@@ -2,6 +2,8 @@
 
 namespace App\Document;
 
+use ApiPlatform\Doctrine\Odm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -14,9 +16,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-# TODO: rechercher un user
-# TODO: ma liste d'amis
-# TODO: ajouter champs nickname
 #[ApiResource(
     operations: [
         new Get(),
@@ -31,6 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['user:create', 'user:update']]
 )]
 #[ODM\Document(repositoryClass: UserRepository::class)]
+#[ApiFilter(SearchFilter::class, properties: ['email' => 'partial', 'nickname' => 'partial'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Groups(['user:read', 'friendRequest:read', 'friendship:read'])]
@@ -42,6 +42,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read', 'user:create', 'user:update', 'friendRequest:read', 'friendship:read'])]
     #[ODM\Field]
     private ?string $email = null;
+
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
+    #[Groups(['user:read', 'user:create', 'user:update', 'friendRequest:read', 'friendship:read'])]
+    #[ODM\Field]
+    private ?string $nickname = null;
 
     #[ODM\Field]
     private ?string $password = null;
