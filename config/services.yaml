@@ -22,7 +22,15 @@ services:
             - '../src/Document/'
             - '../src/Kernel.php'
     
-    App\State\UserPasswordHasher:
+    App\State\User\UserPasswordHasher:
+        bind:
+            $processor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
+            
+    App\State\FriendRequest\FriendRequestCreationProcessor:
+        bind:
+            $processor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
+            
+    App\State\FriendRequest\FriendRequestAnswerProcessor:
         bind:
             $processor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
 

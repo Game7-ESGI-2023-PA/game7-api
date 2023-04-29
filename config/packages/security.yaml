@@ -1,28 +1,33 @@
 security:
+    
+    # https://symfony.com/doc/current/security.html#hierarchical-roles
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+        
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         # used to reload user from session & other features (e.g. switch_user)
         my_mongo_provider:
-            mongodb: { class: App\Document\User, property: email }
+            mongodb: { class: App\Document\User }
+            
+        email_my_mongo_provider:
+            mongodb: { class: App\Document\User, property: email}
     
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        api:
-            pattern: ^/api/
-            stateless: true
-            provider: my_mongo_provider
-            jwt: ~
         main:
             lazy: true
-            provider: my_mongo_provider
+            pattern: /api/login
+            provider: email_my_mongo_provider
             stateless: true
             json_login:
-                check_path: /auth # The name in routes.yaml is enough for mapping
+                check_path: /api/login # The name in routes.yaml is enough for mapping
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -34,7 +39,11 @@ security:
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
-
+        api:
+            pattern: ^/api/
+            stateless: true
+            provider: my_mongo_provider
+            jwt: ~
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
@@ -42,6 +51,7 @@ security:
         - { path: ^/api/?$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI docs
         - { path: ^/health/?$, roles: PUBLIC_ACCESS}
         - { path: ^/(login|api/register)/?$, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/?, roles: ROLE_ADMIN }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

@@ -2,46 +2,57 @@
 
 namespace App\Document;
 
+use ApiPlatform\Doctrine\Odm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use App\State\UserPasswordHasher;
+use App\Repository\UserRepository;
+use App\State\User\CurrentUserProvider;
+use App\State\User\UserPasswordHasher;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
+        new Get(),
+        new Get(
+            uriTemplate: 'me',
+            provider: CurrentUserProvider::class
+        ),
         new GetCollection(),
         new Post(
             uriTemplate: 'register',
             validationContext: ['groups' => ['Default', 'user:create']],
             processor: UserPasswordHasher::class
         ),
-        new Get(),
-        new Patch(processor: UserPasswordHasher::class),
-        new Delete(),
     ],
     normalizationContext: ['groups' => ['user:read']],
-    denormalizationContext: ['groups' => ['user:create', 'user:update']],
+    denormalizationContext: ['groups' => ['user:create', 'user:update']]
 )]
-#[ODM\Document]
+#[ODM\Document(repositoryClass: UserRepository::class)]
+#[ApiFilter(SearchFilter::class, properties: ['email' => 'partial', 'nickname' => 'partial'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'friendRequest:read', 'friendship:read'])]
     #[ODM\Id]
     private ?string $id = null;
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user:read', 'user:create', 'user:update'])]
+    #[Groups(['user:read', 'user:create', 'user:update', 'friendRequest:read', 'friendship:read'])]
     #[ODM\Field]
     private ?string $email = null;
+
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
+    #[Groups(['user:read', 'user:create', 'user:update', 'friendRequest:read', 'friendship:read'])]
+    #[ODM\Field]
+    private ?string $nickname = null;
 
     #[ODM\Field]
     private ?string $password = null;
@@ -50,13 +61,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:create', 'user:update'])]
     private ?string $plainPassword = null;
 
-    #[Groups(['user:read'])]
     #[ODM\Field(type: 'collection')]
     private array $roles = [];
 
     public function getId(): ?string
     {
         return $this->id;
+    }
+
+    public function getNickname(): ?string
+    {
+        return $this->nickname;
+    }
+
+    public function setNickname(?string $nickname): void
+    {
+        $this->nickname = $nickname;
     }
 
     public function getEmail(): ?string
@@ -124,12 +144,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string) $this->id;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
         $this->plainPassword = null;
