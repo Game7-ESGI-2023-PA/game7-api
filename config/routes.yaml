@@ -4,6 +4,6 @@ controllers:
         namespace: App\Controller
     type: attribute
 
-/api/auth:
-    path: /api/auth
+/api/login:
+    path: /api/login
     methods: ['POST']
