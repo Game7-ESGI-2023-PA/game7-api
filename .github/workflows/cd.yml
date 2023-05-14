@@ -29,4 +29,4 @@ jobs:
       - name: Execute script
         run: |
           ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ vars.SERVER_USER }}@${{ vars.SERVER_PUBLIC_IP }} "\
-            ./start_prod.sh"
+            ./start_prod.sh  '${{ secrets.APP_SECRET }}' '${{ secrets.MONGODB_URL }}' '${{ secrets.MONGODB_DB }}' '${{ secrets.JWT_PASSPHRASE }}'"
