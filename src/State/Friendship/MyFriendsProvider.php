@@ -20,6 +20,10 @@ class MyFriendsProvider implements ProviderInterface
     {
         $currentUser = $this->security->getUser();
         $repo = $this->documentManager->getRepository(Friendship::class);
-        return $repo->findOneBy(['user' => $currentUser]);
+        $friendship =  $repo->findOneBy(['user' => $currentUser]);
+        if(is_null($friendship)) {
+            return [];
+        }
+        else return $friendship;
     }
 }
