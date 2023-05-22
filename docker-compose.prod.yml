@@ -6,7 +6,7 @@ services:
     environment:
       APP_SECRET: ${APP_SECRET}
       MONGODB_URL: ${MONGODB_URL}
-      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN}
+      CORS_ALLOW_ORIGIN: "*"
       APP_ENV: ${APP_ENV}
       
   caddy:
