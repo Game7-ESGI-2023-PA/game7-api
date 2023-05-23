@@ -47,7 +47,7 @@ CORS_ALLOW_ORIGIN='*' \
 JWT_PRIVATE_KEY_PATH=%kernel.project_dir%/config/jwt/private.pem \
 JWT_PUBLIC_KEY_PATH=%kernel.project_dir%/config/jwt/private.pem \
 JWT_PASSPHRASE="$JWT_PASSPHRASE" \
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy -d --build
 
 sudo docker compose exec php sh -c '
 	set -e
