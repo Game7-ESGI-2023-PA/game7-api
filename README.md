@@ -25,3 +25,9 @@ docker compose exec php sh -c '
     setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
 '
 ```
+
+## Code quality
+
+- use the following command to check code quality (with level between 0 and 10):
+
+`docker run --init -it --rm -v "$(pwd):/project" -v "$(pwd)/tmp-phpqa:/tmp" -w /project jakzal/phpqa phpstan analyse src --level <level>`

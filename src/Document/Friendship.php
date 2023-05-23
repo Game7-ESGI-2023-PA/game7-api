@@ -25,6 +25,7 @@ class Friendship
     #[ODM\Id]
     private ?string $id = null;
     #[ODM\ReferenceOne(targetDocument: User::class)]
+    #[ODM\Index(unique: true)]
     private ?User $user = null;
     #[Groups('friendship:read')]
     #[ODM\ReferenceMany(targetDocument: User::class)]

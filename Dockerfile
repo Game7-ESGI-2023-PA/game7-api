@@ -10,7 +10,7 @@ FROM composer/composer:2-bin AS composer
 FROM mlocati/php-extension-installer:latest AS php_extension_installer
 
 # Build Caddy with the Mercure and Vulcain modules
-FROM caddy:2.6-builder-alpine AS app_caddy_builder
+FROM caddy:2.7-builder-alpine AS app_caddy_builder
 
 RUN xcaddy build \
     --with github.com/dunglas/mercure \

@@ -38,20 +38,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiFilter(SearchFilter::class, properties: ['email' => 'partial', 'nickname' => 'partial'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[Groups(['user:read', 'friendRequest:read', 'friendship:read'])]
+    #[Groups(['user:read', 'friendRequest:read', 'friendship:read', 'gameLobby:read'])]
     #[ODM\Id]
     private ?string $id = null;
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user:read', 'user:create', 'user:update', 'friendRequest:read', 'friendship:read'])]
+    #[Groups(['user:read', 'user:create', 'user:update', 'friendRequest:read', 'friendship:read', 'gameLobby:read'])]
     #[ODM\Field]
+    #[ODM\Index(unique: true)]
     private ?string $email = null;
 
     #[Assert\NotBlank]
     #[Assert\Type('string')]
-    #[Groups(['user:read', 'user:create', 'user:update', 'friendRequest:read', 'friendship:read'])]
+    #[Groups(['user:read', 'user:create', 'user:update', 'friendRequest:read', 'friendship:read', 'gameLobby:read'])]
     #[ODM\Field]
+    #[ODM\Index(unique: true)]
     private ?string $nickname = null;
 
     #[ODM\Field]
