@@ -59,6 +59,8 @@ sudo docker compose exec php sh -c '
 
 sudo docker compose exec php sh -c 'php bin/console doctrine:mongodb:schema:create --index'
 
+sudo docker compose exec php sh -c 'php bin/console cache:clear'
+
 exit_status=$?
 echo "Docker compose exit status: $exit_status"
 
