@@ -13,6 +13,9 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+// TODO: only admin can create, update and delete game
+// TODO: recherche full text mongo atlas
+
 #[ODM\Document(repositoryClass: GameRepository::class)]
 #[ApiResource(
     operations: [
@@ -34,6 +37,7 @@ class Game
     #[ODM\Field(type: 'string')]
     #[Assert\NotBlank]
     #[Groups(['game:read', 'game:write', 'gameLobby:read'])]
+    #[ODM\Index(unique: true)]
     private string $name;
 
     #[ODM\Field(type: 'string')]

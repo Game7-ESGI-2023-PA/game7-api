@@ -57,6 +57,8 @@ sudo docker compose exec php sh -c '
 	setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
 '
 
+sudo docker compose exec php sh -c 'php bin/console doctrine:mongodb:schema:create --index'
+
 exit_status=$?
 echo "Docker compose exit status: $exit_status"
 
