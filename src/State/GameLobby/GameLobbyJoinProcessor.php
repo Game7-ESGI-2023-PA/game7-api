@@ -21,7 +21,7 @@ class GameLobbyJoinProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
         $currentUser = $this->security->getUser();
-        if(count($data->getPlayers()) >= $data->getMaxPlayers()) {
+        if(count($data->getPlayers()) >= $data->getGame()->getMaxPlayers()) {
             throw new GameLobbyException('Maximum player number is already reached');
         }
         $data->addPlayers($currentUser);

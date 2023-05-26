@@ -17,6 +17,7 @@ class GameLobbyCreationProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
         $currentUser = $this->security->getUser();
+
         $data->setMaster($currentUser);
         $data->addPlayers($currentUser);
         $this->processor->process($data, $operation, $uriVariables, $context);

@@ -2,6 +2,8 @@
 
 namespace App\Document;
 
+use ApiPlatform\Doctrine\Odm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
@@ -38,18 +40,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class GameLobby
 {
+    public const STATUS = ['pending', 'playing', 'done'];
+
     #[ODM\Id]
-    #[Groups(['gameLobby:read'])]
+    #[Groups(['game:read','gameLobby:read'])]
     private ?string $id = null;
 
-    #[ODM\ReferenceOne(targetDocument: User::class)]
-    #[Groups(['gameLobby:read'])]
+    #[ODM\ReferenceOne(storeAs: 'id', targetDocument: User::class)]
+    #[Groups(['game:read', 'gameLobby:read'])]
     private ?User $master = null;
-
-    #[ODM\Field]
-    #[Assert\Type('int')]
-    #[Groups(['gameLobby:write', 'gameLobby:read'])]
-    private ?int $maxPlayers = null;
 
     #[ODM\ReferenceOne(targetDocument: Game::class)]
     #[ApiProperty(
@@ -62,8 +61,13 @@ class GameLobby
     #[ApiProperty(
         example: '["/api/users/{userId}", "/api/users/{userId}"]',
     )]
-    #[Groups(['gameLobby:read'])]
+    #[Groups(['game:read', 'gameLobby:read'])]
     private ?ArrayCollection $players = null;
+
+    #[Groups(['game:read', 'gameLobby:read'])]
+    #[ODM\Field(type: 'string')]
+    #[Assert\Choice(choices: GameLobby::STATUS, message: 'Invalid status.')]
+    private string $status = 'pending';
 
     public function __construct()
     {
@@ -73,16 +77,6 @@ class GameLobby
     public function getId(): ?string
     {
         return $this->id;
-    }
-
-    public function getMaxPlayers(): ?int
-    {
-        return $this->maxPlayers;
-    }
-
-    public function setMaxPlayers(?int $maxPlayers): void
-    {
-        $this->maxPlayers = $maxPlayers;
     }
 
     public function getMaster(): ?User
@@ -100,9 +94,12 @@ class GameLobby
         return $this->game;
     }
 
-    public function setGame(?Game $game): void
+    public function setGame(Game $game): self
     {
         $this->game = $game;
+        $this->game->addLobby($this);
+
+        return $this;
     }
 
     public function getPlayers(): ArrayCollection
@@ -126,4 +123,13 @@ class GameLobby
         return $this;
     }
 
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
+    }
 }
