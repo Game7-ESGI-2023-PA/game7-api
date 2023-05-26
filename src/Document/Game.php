@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     new Put(),
     new Delete(),
     new Post()
-],
+    ],
     normalizationContext: ['groups' => ['game:read']],
     denormalizationContext: ['groups' => ['game:write']]
 )]
@@ -41,9 +41,19 @@ class Game
     private string $name;
 
     #[ODM\Field(type: 'string')]
+    #[Assert\NotBlank]
+    #[Groups(['game:read', 'game:write', 'gameLobby:read'])]
+    private string $description;
+
+    #[ODM\Field(type: 'string')]
     #[Assert\Url]
     #[Groups(['game:read', 'game:write', 'gameLobby:read'])]
     private string $imageUrl;
+
+    #[ODM\Field(type: 'string')]
+    #[Assert\Url]
+    #[Groups(['game:read', 'game:write'])]
+    private string $bgUrl;
 
     public function getId(): ?string
     {
@@ -61,6 +71,28 @@ class Game
 
         return $this;
     }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function getBgUrl(): string
+    {
+        return $this->bgUrl;
+    }
+
+    public function setBgUrl(string $bgUrl): void
+    {
+        $this->bgUrl = $bgUrl;
+    }
+
+
 
     public function getImageUrl(): string
     {
