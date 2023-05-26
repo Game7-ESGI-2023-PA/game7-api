@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['game:read']],
     denormalizationContext: ['groups' => ['game:write']]
 )]
-#[ApiFilter(SearchFilter::class,  properties: ['name' => 'partial', 'description' => 'partial'])]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'description' => 'partial'])]
 class Game
 {
     #[ODM\Id]
