@@ -12,6 +12,8 @@ use App\Repository\GameRepository;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Doctrine\Odm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 
 // TODO: only admin can create, update and delete game
 // TODO: recherche full text mongo atlas
@@ -28,6 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['game:read']],
     denormalizationContext: ['groups' => ['game:write']]
 )]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'description' => 'partial'])]
 class Game
 {
     #[ODM\Id]
