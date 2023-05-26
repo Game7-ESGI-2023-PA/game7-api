@@ -9,12 +9,11 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class GameLobbyJoinProcessor implements ProcessorInterface
 {
-
     public function __construct(
         private readonly Security $security,
         private readonly ProcessorInterface $processor
-    )
-    {}
+    ) {
+    }
 
     /**
      * @throws GameLobbyException

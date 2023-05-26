@@ -10,11 +10,11 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class MyFriendsProvider implements ProviderInterface
 {
-
     public function __construct(
         private readonly Security $security,
         private readonly DocumentManager $documentManager,
-    ){}
+    ) {
+    }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
@@ -23,7 +23,8 @@ class MyFriendsProvider implements ProviderInterface
         $friendship =  $repo->findOneBy(['user' => $currentUser]);
         if(is_null($friendship)) {
             return [];
+        } else {
+            return $friendship;
         }
-        else return $friendship;
     }
 }

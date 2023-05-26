@@ -49,7 +49,7 @@ class FriendRequest
     #[Groups(['friendRequest:read'])]
     private ?string $id = null;
 
-    const STATUS = ['pending', 'accepted', 'refused'];
+    public const STATUS = ['pending', 'accepted', 'refused'];
 
     #[Groups(['friendRequest:read'])]
     #[ApiProperty(

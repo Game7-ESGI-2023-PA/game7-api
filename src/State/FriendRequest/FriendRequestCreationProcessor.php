@@ -11,12 +11,12 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class FriendRequestCreationProcessor implements ProcessorInterface
 {
-
     public function __construct(
         private readonly ProcessorInterface $processor,
         private readonly Security $security,
         private readonly DocumentManager $documentManager
-    ){}
+    ) {
+    }
 
     /**
      * @throws FriendRequestException
@@ -26,12 +26,12 @@ class FriendRequestCreationProcessor implements ProcessorInterface
         $currentUser = $this->security->getUser();
         $data->setFrom($currentUser);
 
-        if($data->getTo() == $currentUser){
+        if($data->getTo() == $currentUser) {
             throw new FriendRequestException('Cannot send friend request to yourself');
         }
 
         $repo = $this->documentManager->getRepository(FriendRequest::class);
-        if($repo->isFriendRequestExisting($currentUser, $data->getTo())){
+        if($repo->isFriendRequestExisting($currentUser, $data->getTo())) {
             throw new FriendRequestException('A friend request with this users already exists (accepted or pending)');
         }
 
