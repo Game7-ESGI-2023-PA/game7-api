@@ -8,7 +8,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserRepository extends DocumentRepository implements UserLoaderInterface
 {
-
     public function loadUserByIdentifier(string $identifier): ?UserInterface
     {
         $queryBuilder = $this->createQueryBuilder();

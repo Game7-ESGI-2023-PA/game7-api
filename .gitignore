@@ -25,3 +25,4 @@
 ###< lexik/jwt-authentication-bundle ###
 
 tmp-phpqa
+.php-cs-fixer.cache

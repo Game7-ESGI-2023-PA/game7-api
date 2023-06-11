@@ -13,7 +13,8 @@ class MyReceivedFriendRequestProvider implements ProviderInterface
     public function __construct(
         private readonly Security $security,
         private readonly DocumentManager $documentManager
-    ) {}
+    ) {
+    }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {

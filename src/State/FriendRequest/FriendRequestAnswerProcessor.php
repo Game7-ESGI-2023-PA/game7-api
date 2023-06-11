@@ -13,12 +13,12 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class FriendRequestAnswerProcessor implements ProcessorInterface
 {
-
     public function __construct(
         private readonly ProcessorInterface $processor,
         private readonly Security $security,
         private readonly DocumentManager $documentManager,
-    ){}
+    ) {
+    }
 
     /**
      * @throws FriendRequestException
@@ -27,7 +27,7 @@ class FriendRequestAnswerProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
         $currentUser = $this->security->getUser();
-        if($data->getTo() != $currentUser ) {
+        if($data->getTo() != $currentUser) {
             throw new FriendRequestException('the answerer needs to be the receiver of the request');
         }
         if($data->getStatus() == 'accepted') {
@@ -41,11 +41,11 @@ class FriendRequestAnswerProcessor implements ProcessorInterface
     /**
      * @throws MongoDBException
      */
-    private function addFriend(User $user,User $friend): void
+    private function addFriend(User $user, User $friend): void
     {
         $friendshipRepository = $this->documentManager->getRepository(Friendship::class);
         $friendship = $friendshipRepository->findOneBy(['user' => $user]);
-        if(is_null($friendship)){
+        if(is_null($friendship)) {
             $friendship = new Friendship();
             $friendship->setUser($user);
         }

@@ -31,3 +31,7 @@ docker compose exec php sh -c '
 - use the following command to check code quality (with level between 0 and 10):
 
 `docker run --init -it --rm -v "$(pwd):/project" -v "$(pwd)/tmp-phpqa:/tmp" -w /project jakzal/phpqa phpstan analyse src --level <level>`
+
+- use the following command to fix php code standards:
+
+`docker run --init -it --rm -v "$(pwd):/project" -v "$(pwd)/tmp-phpqa:/tmp" -w /project jakzal/phpqa php-cs-fixer fix src`
