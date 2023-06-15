@@ -5,22 +5,6 @@ if [ -z "$(which aws)" ]; then
     exit 1
 fi
 
-# APP_SECRET_NAME="game7-app-secret"
-# MONGODB_URL_NAME="game7-mongo-url"
-# MONGODB_DB_NAME="game7-mongo-dbname"
-# JWT_PASSPHRASE_NAME="game7-jwt-passphrase"
-
-# APP_SECRET=$(aws secretsmanager get-secret-value --secret-id "$APP_SECRET_NAME" --query 'SecretString' --output text)
-# MONGODB_URL=$(aws secretsmanager get-secret-value --secret-id "$MONGODB_URL_NAME" --query 'SecretString' --output text)
-# MONGODB_DB=$(aws secretsmanager get-secret-value --secret-id "$MONGODB_DB_NAME" --query 'SecretString' --output text)
-# JWT_PASSPHRASE=$(aws secretsmanager get-secret-value --secret-id "$JWT_PASSPHRASE_NAME" --query 'SecretString' --output text)
-
-
-# if [ -z "$APP_SECRET" ] || [ -z "$MONGODB_URL" ] || [ -z "$MONGODB_DB" ] || [ -z "$JWT_PASSPHRASE" ]; then
-#     echo "Error: Failed to fetch APP_SECRET, MONGODB_URL, MONGODB_DB and/or JWT_PASSPHRASE from AWS Secrets Manager."
-#     exit 1
-# fi
-
 APP_SECRET="$1"
 MONGODB_URL="$2"
 MONGODB_DB="$3"
@@ -37,6 +21,10 @@ else
     git clone git@github.com:Game7-ESGI-2023-PA/game7-api.git
     cd game7-api || return
 fi
+
+# Delete old containers : makes downtime, but fix caching issues
+sudo docker compose stop
+sudo docker compose rm
 
 sudo \
 APP_ENV='prod' \
