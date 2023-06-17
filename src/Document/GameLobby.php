@@ -2,10 +2,9 @@
 
 namespace App\Document;
 
-use ApiPlatform\Doctrine\Odm\Filter\SearchFilter;
-use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
@@ -25,6 +24,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new GetCollection(),
+        new Get(),
         new Post(
             processor: GameLobbyCreationProcessor::class
         ),
@@ -37,6 +37,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     normalizationContext: ['groups' => ['gameLobby:read']],
     denormalizationContext: ['groups' => ['gameLobby:write']],
+    mercure: true
 )]
 class GameLobby
 {
