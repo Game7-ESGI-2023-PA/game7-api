@@ -42,6 +42,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ODM\Id]
     private ?string $id = null;
 
+    // TODO: custom validator to check if already exists and return custom error
     #[Assert\NotBlank]
     #[Assert\Email]
     #[Groups(['user:read', 'user:create', 'user:update', 'friendRequest:read', 'friendship:read', 'gameLobby:read', 'game:read'])]

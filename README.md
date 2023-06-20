@@ -26,6 +26,11 @@ docker compose exec php sh -c '
 '
 ```
 
+## Init MongoDB Indexes
+```
+docker compose exec php sh -c 'php bin/console doctrine:mongodb:schema:create --index'
+```
+
 ## Code quality
 
 - use the following command to check code quality (with level between 0 and 10):
