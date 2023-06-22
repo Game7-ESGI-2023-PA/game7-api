@@ -9,7 +9,6 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Exception\GameLobbyException;
-use App\Repository\GameLobbyRepository;
 use App\State\GameLobby\GameLobbyCreationProcessor;
 use App\State\GameLobby\GameLobbyJoinProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,11 +19,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 // TODO: change status (only master) -> trigger le moteur de jeux
 // TODO: start the game (only master) -> send information to game dispatcher
 
-#[ODM\Document(repositoryClass: GameLobbyRepository::class)]
+#[ODM\Document]
 #[ApiResource(
     operations: [
         new GetCollection(),
-        new Get(),
+        new Get(), // TODO: add rbac
         new Post(
             processor: GameLobbyCreationProcessor::class
         ),
@@ -51,7 +50,7 @@ class GameLobby
     #[Groups(['game:read', 'gameLobby:read'])]
     private ?User $master = null;
 
-    #[ODM\ReferenceOne(targetDocument: Game::class)]
+    #[ODM\ReferenceOne(storeAs: 'id', targetDocument: Game::class)]
     #[ApiProperty(
         example: '/api/games/{gameId}',
     )]
@@ -108,7 +107,7 @@ class GameLobby
         return $this->players;
     }
 
-    public function addPlayers(User $user): self
+    public function addPlayer(User $user): self
     {
         if (!$this->players->contains($user)) {
             $this->players[] = $user;
@@ -117,7 +116,7 @@ class GameLobby
         return $this;
     }
 
-    public function removePlayers(User $user): self
+    public function removePlayer(User $user): self
     {
         $this->players->removeElement($user);
 
