@@ -8,9 +8,11 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Dto\GameLobby\SendMessageDto;
 use App\Exception\GameLobbyException;
 use App\State\GameLobby\GameLobbyCreationProcessor;
 use App\State\GameLobby\GameLobbyJoinProcessor;
+use App\State\GameLobby\GameLobbySendMessageProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,6 +34,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
             exceptionToStatus: [GameLobbyException::class => 400],
             denormalizationContext: ['groups' => ['gameLobby:join']],
             processor: GameLobbyJoinProcessor::class,
+        ),
+        new Put(
+            uriTemplate: '/game_lobbies/{id}/send_message',
+            input: SendMessageDto::class,
+            processor: GameLobbySendMessageProcessor::class
         )
     ],
     normalizationContext: ['groups' => ['gameLobby:read']],
@@ -64,6 +71,10 @@ class GameLobby
     #[Groups(['game:read', 'gameLobby:read'])]
     private ?ArrayCollection $players = null;
 
+    #[Groups(['gameLobby:read'])]
+    #[ODM\EmbedMany(targetDocument: LobbyMessage::class)]
+    private ?ArrayCollection $messages = null;
+
     #[Groups(['game:read', 'gameLobby:read'])]
     #[ODM\Field(type: 'string')]
     #[Assert\Choice(choices: GameLobby::STATUS, message: 'Invalid status.')]
@@ -72,6 +83,7 @@ class GameLobby
     public function __construct()
     {
         $this->players = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -120,6 +132,23 @@ class GameLobby
     {
         $this->players->removeElement($user);
 
+        return $this;
+    }
+
+    public function getMessages(): ArrayCollection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(LobbyMessage $message): self
+    {
+        $this->messages[] = $message;
+        return $this;
+    }
+
+    public function removeMessage(LobbyMessage $message): self
+    {
+        $this->messages->removeElement($message);
         return $this;
     }
 
