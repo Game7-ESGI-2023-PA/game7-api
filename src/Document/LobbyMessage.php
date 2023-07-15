@@ -8,19 +8,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class LobbyMessage
 {
     #[ODM\Id]
-    #[Groups(['gameLobby:read'])]
+    #[Groups([GameLobby::READ])]
     private ?string $id = null;
     #[ODM\Field]
-    #[Groups(['gameLobby:read'])]
+    #[Groups([GameLobby::READ])]
     private ?string $senderId = null;
     #[ODM\Field]
-    #[Groups(['gameLobby:read'])]
+    #[Groups([GameLobby::READ])]
     private ?string $senderName = null;
     #[ODM\Field]
-    #[Groups(['gameLobby:read'])]
+    #[Groups([GameLobby::READ])]
     private ?\DateTime $dateTime = null;
     #[ODM\Field]
-    #[Groups(['gameLobby:read'])]
+    #[Groups([GameLobby::READ])]
     private ?string $content = null;
 
     public function getId(): ?string

@@ -24,54 +24,63 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
     new Get(),
     new GetCollection(
-        normalizationContext: ['groups' => ['game:collection:read']]
+        normalizationContext: ['groups' => [self::COLLECTION_READ]]
     ),
     new Put(),
     new Delete(),
     new Post()
     ],
-    normalizationContext: ['groups' => ['game:read']],
-    denormalizationContext: ['groups' => ['game:write']],
+    normalizationContext: ['groups' => [self::READ]],
+    denormalizationContext: ['groups' => [self::WRITE]],
 )]
 #[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'description' => 'partial'])]
 class Game
 {
+
+    public const READ = 'game:read';
+    public const COLLECTION_READ = 'game:collection:read';
+    public const WRITE = 'game:write';
+
     #[ODM\Id]
-    #[Groups(['game:collection:read', 'game:read', 'gameLobby:read'])]
+    #[Groups([self::COLLECTION_READ, self::READ, GameLobby::READ])]
     private ?string $id = null;
 
     #[ODM\Field(type: 'string')]
     #[Assert\NotBlank]
-    #[Groups(['game:collection:read', 'game:read', 'game:write', 'gameLobby:read'])]
+    #[Groups([self::COLLECTION_READ, self::READ, self::WRITE, GameLobby::READ])]
     #[ODM\Index(unique: true)]
     private string $name;
 
     #[ODM\Field(type: 'string')]
     #[Assert\NotBlank]
-    #[Groups(['game:collection:read', 'game:read', 'game:write', 'gameLobby:read'])]
+    #[Groups([self::COLLECTION_READ, self::READ, self::WRITE, GameLobby::READ])]
     private string $description;
 
     #[ODM\Field(type: 'string')]
     #[Assert\Url]
-    #[Groups(['game:collection:read', 'game:read', 'game:write', 'gameLobby:read'])]
+    #[Groups([self::COLLECTION_READ, self::READ, self::WRITE, GameLobby::READ])]
     private string $imageUrl;
 
     #[ODM\Field(type: 'string')]
     #[Assert\Url]
-    #[Groups(['game:collection:read', 'game:read', 'game:write'])]
+    #[Groups([self::COLLECTION_READ, self::READ, self::WRITE])]
     private string $bgUrl;
 
     #[ODM\Field(type: 'int')]
-    #[Assert\Url]
-    #[Groups(['game:read', 'game:write', 'gameLobby:read'])]
+    #[Assert\Positive]
+    #[Groups([self::READ, self::WRITE, GameLobby::READ])]
     private int $maxPlayers;
 
     #[ODM\Field(type: 'int')]
-    #[Assert\Url]
-    #[Groups(['game:read', 'game:write', 'gameLobby:read'])]
+    #[Assert\Positive]
+    #[Groups([self::READ, self::WRITE, GameLobby::READ])]
     private int $minPlayers;
 
-    #[Groups(['game:read', 'game:write'])]
+    #[ODM\Field(type: 'hash')]
+    #[Groups([self::READ, self::WRITE])]
+    private ?array $args = null;
+
+    #[Groups([self::READ, self::WRITE])]
     #[ODM\ReferenceMany(storeAs: 'id', targetDocument: GameLobby::class)]
     private ArrayCollection $lobbies;
 
@@ -143,6 +152,16 @@ class Game
     public function setMinPlayers(int $minPlayers): void
     {
         $this->minPlayers = $minPlayers;
+    }
+
+    public function getArgs(): array
+    {
+        return $this->args;
+    }
+
+    public function setArgs(array $args): void
+    {
+        $this->args = $args;
     }
 
     public function getLobbies(): ArrayCollection
