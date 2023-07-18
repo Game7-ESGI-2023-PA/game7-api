@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "28faa0213c30c9e6fae12b3a7eab528d",
+    "content-hash": "a5d926f3b84835da823da6fe35c4dc5f",
     "packages": [
         {
             "name": "api-platform/core",
@@ -3727,16 +3727,16 @@
         },
         {
             "name": "symfony/http-client",
-            "version": "v6.2.11",
+            "version": "v6.2.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "39f679c12648cc43bd9f0db12cc69b82041b91a1"
+                "reference": "7ef37b91629937843e8f52a2da5587ff16d75d25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/39f679c12648cc43bd9f0db12cc69b82041b91a1",
-                "reference": "39f679c12648cc43bd9f0db12cc69b82041b91a1",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/7ef37b91629937843e8f52a2da5587ff16d75d25",
+                "reference": "7ef37b91629937843e8f52a2da5587ff16d75d25",
                 "shasum": ""
             },
             "require": {
@@ -3796,7 +3796,7 @@
                 "http"
             ],
             "support": {
-                "source": "https://github.com/symfony/http-client/tree/v6.2.11"
+                "source": "https://github.com/symfony/http-client/tree/v6.2.12"
             },
             "funding": [
                 {
@@ -3812,7 +3812,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-12T08:48:34+00:00"
+            "time": "2023-06-24T11:48:11+00:00"
         },
         {
             "name": "symfony/http-client-contracts",

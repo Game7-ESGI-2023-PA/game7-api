@@ -49,6 +49,17 @@ services:
         published: 443
         protocol: udp
 
+  game-dispatcher:
+    image: shanaziz/esgi-g7-game-dispatcher:main
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./games:/opt/games
+    environment:
+      - GAMES_DIR=/opt/games
+      - PORT=3000
+      
+        
 # Mercure is installed as a Caddy module, prevent the Flex recipe from installing another service
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###

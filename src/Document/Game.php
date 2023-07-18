@@ -57,6 +57,16 @@ class Game
     private string $description;
 
     #[ODM\Field(type: 'string')]
+    #[Assert\NotBlank]
+    #[Groups([self::COLLECTION_READ, self::READ, self::WRITE, GameLobby::READ])]
+    private string $dirName;
+
+    #[ODM\Field(type: 'string')]
+    #[Assert\NotBlank]
+    #[Groups([self::COLLECTION_READ, self::READ, self::WRITE, GameLobby::READ])]
+    private string $executableName;
+
+    #[ODM\Field(type: 'string')]
     #[Assert\Url]
     #[Groups([self::COLLECTION_READ, self::READ, self::WRITE, GameLobby::READ])]
     private string $imageUrl;
@@ -109,6 +119,26 @@ class Game
     public function setDescription(string $description): void
     {
         $this->description = $description;
+    }
+
+    public function getDirName(): string
+    {
+        return $this->dirName;
+    }
+
+    public function setDirName(string $dirName): void
+    {
+        $this->dirName = $dirName;
+    }
+
+    public function getExecutableName(): string
+    {
+        return $this->executableName;
+    }
+
+    public function setExecutableName(string $executableName): void
+    {
+        $this->executableName = $executableName;
     }
 
     public function getBgUrl(): string
