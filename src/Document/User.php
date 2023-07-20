@@ -27,31 +27,52 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(),
         new Post(
             uriTemplate: 'register',
-            validationContext: ['groups' => ['Default', 'user:create']],
+            validationContext: ['groups' => ['Default', self::CREATE]],
             processor: UserPasswordHasher::class
         ),
     ],
-    normalizationContext: ['groups' => ['user:read']],
-    denormalizationContext: ['groups' => ['user:create', 'user:update']]
+    normalizationContext: ['groups' => [self::READ]],
+    denormalizationContext: ['groups' => [self::CREATE, self::UPDATE]]
 )]
 #[ODM\Document(repositoryClass: UserRepository::class)]
 #[ApiFilter(SearchFilter::class, properties: ['email' => 'partial', 'nickname' => 'partial'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[Groups(['user:read', 'friendRequest:read', 'friendship:read', 'gameLobby:read', 'game:read'])]
+    public const READ = 'user:read';
+    public const CREATE = 'user:create';
+    public const UPDATE= 'user:update';
+
+    #[Groups([self::READ, FriendRequest::READ, Friendship::READ, GameLobby::READ, Game::READ])]
     #[ODM\Id]
     private ?string $id = null;
 
+    // TODO: custom validator to check if already exists and return custom error
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user:read', 'user:create', 'user:update', 'friendRequest:read', 'friendship:read', 'gameLobby:read', 'game:read'])]
+    #[Groups([
+        self::READ,
+        self::CREATE,
+        self::UPDATE,
+        FriendRequest::READ,
+        Friendship::READ,
+        GameLobby::READ,
+        Game::READ
+    ])]
     #[ODM\Field]
     #[ODM\Index(unique: true)]
     private ?string $email = null;
 
     #[Assert\NotBlank]
     #[Assert\Type('string')]
-    #[Groups(['user:read', 'user:create', 'user:update', 'friendRequest:read', 'friendship:read', 'gameLobby:read', 'game:read'])]
+    #[Groups([
+        self::READ,
+        self::CREATE,
+        self::UPDATE,
+        FriendRequest::READ,
+        Friendship::READ,
+        GameLobby::READ,
+        Game::READ
+    ])]
     #[ODM\Field]
     #[ODM\Index(unique: true)]
     private ?string $nickname = null;
@@ -59,8 +80,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ODM\Field]
     private ?string $password = null;
 
-    #[Assert\NotBlank(groups: ['user:create'])]
-    #[Groups(['user:create', 'user:update'])]
+    #[Assert\NotBlank(groups: [self::CREATE])]
+    #[Groups([self::CREATE, self::UPDATE])]
     private ?string $plainPassword = null;
 
     #[ODM\Field(type: 'collection')]

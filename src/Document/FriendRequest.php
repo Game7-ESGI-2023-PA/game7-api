@@ -35,37 +35,42 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Put(
             uriTemplate: '/friend_requests/{id}/answer/',
-            denormalizationContext: ['groups' => 'friendRequest:answer'],
+            denormalizationContext: ['groups' => self::ANSWER],
             processor: FriendRequestAnswerProcessor::class
         )
     ],
-    normalizationContext: ['groups' => ['friendRequest:read']],
-    denormalizationContext: ['groups' => ['friendRequest:write']]
+    normalizationContext: ['groups' => [self::READ]],
+    denormalizationContext: ['groups' => [self::WRITE]]
 )]
 #[ODM\Document(repositoryClass: FriendRequestRepository::class)]
 class FriendRequest
 {
+
+    public const READ = 'friendRequest:read';
+    public const WRITE = 'friendRequest:write';
+    public const ANSWER = 'friendRequest:answer';
+
     #[ODM\Id]
-    #[Groups(['friendRequest:read'])]
+    #[Groups([self::READ])]
     private ?string $id = null;
 
     public const STATUS = ['pending', 'accepted', 'refused'];
 
-    #[Groups(['friendRequest:read'])]
+    #[Groups([self::READ])]
     #[ApiProperty(
         example: '/api/users/{userId}',
     )]
     #[ODM\ReferenceOne(targetDocument: User::class)]
     private User $from;
 
-    #[Groups(['friendRequest:read', 'friendRequest:write'])]
+    #[Groups([self::READ, self::WRITE])]
     #[ODM\ReferenceOne(targetDocument: User::class)]
     #[ApiProperty(
         example: '/api/users/{userId}',
     )]
     private User $to;
 
-    #[Groups(['friendRequest:read', 'friendRequest:answer'])]
+    #[Groups([self::READ, self::ANSWER])]
     #[ODM\Field(type: 'string')]
     #[Assert\Choice(choices: FriendRequest::STATUS, message: 'Invalid status.')]
     private string $status = 'pending';

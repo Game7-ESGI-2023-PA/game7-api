@@ -18,16 +18,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
             provider: MyFriendsProvider::class
         ),
     ],
-    normalizationContext: ['groups' => 'friendship:read']
+    normalizationContext: ['groups' => self::READ]
 )]
 class Friendship
 {
+    public const READ = 'friendship:read';
+
     #[ODM\Id]
     private ?string $id = null;
     #[ODM\ReferenceOne(targetDocument: User::class)]
     #[ODM\Index(unique: true)]
     private ?User $user = null;
-    #[Groups('friendship:read')]
+    #[Groups(self::READ)]
     #[ODM\ReferenceMany(targetDocument: User::class)]
     private ArrayCollection $friends;
 

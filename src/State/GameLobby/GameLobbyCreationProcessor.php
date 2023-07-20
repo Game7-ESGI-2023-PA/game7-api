@@ -6,11 +6,11 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class GameLobbyCreationProcessor implements ProcessorInterface
+readonly class GameLobbyCreationProcessor implements ProcessorInterface
 {
     public function __construct(
-        private readonly Security $security,
-        private readonly ProcessorInterface $processor
+        private Security           $security,
+        private ProcessorInterface $processor
     ) {
     }
 
@@ -19,7 +19,7 @@ class GameLobbyCreationProcessor implements ProcessorInterface
         $currentUser = $this->security->getUser();
 
         $data->setMaster($currentUser);
-        $data->addPlayers($currentUser);
+        $data->addPlayer($currentUser);
         $this->processor->process($data, $operation, $uriVariables, $context);
     }
 }
