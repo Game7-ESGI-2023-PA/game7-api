@@ -8,10 +8,12 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Dto\GameLobby\InitGameDto;
+use App\Dto\GameLobby\NextStepGameDto;
 use App\Dto\GameLobby\SendMessageDto;
 use App\Exception\GameInitException;
 use App\Exception\GameLobbyException;
 use App\State\GameLobby\Game\InitGameProcessor;
+use App\State\GameLobby\Game\GameCurrentStepProcessor;
 use App\State\GameLobby\GameLobbyCreationProcessor;
 use App\State\GameLobby\GameLobbyJoinProcessor;
 use App\State\GameLobby\GameLobbySendMessageProcessor;
@@ -48,6 +50,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
             denormalizationContext: ['groups' => [self::INIT_GAME]],
             input: InitGameDto::class,
             processor: InitGameProcessor::class,
+        ),
+        new Put(
+            // TODO: only master
+            uriTemplate: '/game_lobbies/{id}/next_step',
+            exceptionToStatus: [GameLobbyException::class => 400, GameInitException::class => 400],
+            denormalizationContext: ['groups' => [self::NEXT_STEP]],
+            input: NextStepGameDto::class,
+            processor: GameCurrentStepProcessor::class,
         )
     ],
     normalizationContext: ['groups' => [self::READ]],
@@ -62,6 +72,7 @@ class GameLobby
     public const WRITE_MESSAGE = 'gameLobby:write:message';
     public const JOIN = 'gameLobby:join';
     public const INIT_GAME = 'gameLobby:init:game';
+    public const NEXT_STEP = 'gameLobby:next:step';
 
     #[ODM\Id]
     #[Groups([Game::READ, self::READ])]

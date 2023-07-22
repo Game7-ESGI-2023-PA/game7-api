@@ -4,17 +4,15 @@ namespace App\State\GameLobby\Game;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
-use App\Document\GameLobby;
-use App\Document\LobbyGamingData;
-use App\Exception\GameInitException;
-use App\Exception\GameLobbyException;
 use App\Service\QueryGameDispatcher;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use App\Exception\GameLobbyException;
+use App\Document\GameLobby;
 use Exception;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-readonly class InitGameProcessor implements ProcessorInterface
+class GameCurrentStepProcessor implements ProcessorInterface
 {
 
     public function __construct(
@@ -23,14 +21,10 @@ readonly class InitGameProcessor implements ProcessorInterface
         private ProcessorInterface  $processor,
     ){}
 
-    /**
-     * @throws GameLobbyException
-     * @throws GameInitException
-     */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         $lobbyId = $uriVariables['id'];
-        $gameArgs = $data->getArgs();
+        $newActions = $data->getArgs();
         $repository = $this->documentManager->getRepository(GameLobby::class);
 
         /* @var GameLobby $lobby*/
@@ -38,26 +32,30 @@ readonly class InitGameProcessor implements ProcessorInterface
         if (is_null($lobby)) {
             throw new GameLobbyException("Game lobby not found ".$lobbyId);
         }
-
-        if (!is_null($lobby->getLobbyGamingData())) {
-            throw new GameLobbyException("Game already started ".$lobbyId);
+        if (is_null($lobby->getLobbyGamingData())) {
+            throw new GameLobbyException("Game not started ".$lobbyId);
         }
 
+        $actions = $lobby->getLobbyGamingData()->getGameInstructions();
+        if (is_null($actions)) {
+            $sendActions = [ $newActions ];
+        }
+        else {
+            $actions[] = $newActions;
+            $sendActions = $actions;
+        }
         try {
             $gameState = $this->gameDispatcher->queryGameEngine(
-                $gameArgs,
+                $lobby->getLobbyGamingData()->getGameInitArgs(),
                 $lobby->getGame()->getDirName(),
                 $lobby->getGame()->getExecutableName(),
-                []
+                $sendActions
             );
-
-            if (!is_null($gameState)) { // TODO: handle init error
-                $lobby->setLobbyGamingData(new LobbyGamingData($gameArgs, [$gameState]));
-                $lobby->setStatus('playing');
-            }
+            $lobby->getLobbyGamingData()->addGameInstructions($newActions);
+            $lobby->getLobbyGamingData()->addGameState($gameState);
             return $this->processor->process($lobby, $operation, $uriVariables, $context);
         } catch (Exception|DecodingExceptionInterface|TransportExceptionInterface $e) {
-            throw new GameInitException("An error occurred while starting the game :".$e->getMessage());
+            throw new GameLobbyException("An error occurred while starting the game :".$e->getMessage());
         }
     }
 }

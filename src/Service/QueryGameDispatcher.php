@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use Exception;
+use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -31,6 +32,7 @@ readonly class QueryGameDispatcher
             "instructions" => $instructions,
         ];
 
+        // dd($body);
         $response = $this->client->request(
             'POST',
             'http://game-dispatcher:3000/execute-game/python',
