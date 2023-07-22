@@ -37,6 +37,11 @@ class LobbyGamingData
         $this->gameState = $gameState;
     }
 
+    public function addGameState(?array $state): self {
+        $this->gameState[] = $state;
+        return $this;
+    }
+
     public function getGameInitArgs(): ?array
     {
         return $this->gameInitArgs;
@@ -55,5 +60,13 @@ class LobbyGamingData
     public function setGameInstructions(?array $gameInstructions): void
     {
         $this->gameInstructions = $gameInstructions;
+    }
+
+    public function addGameInstructions(?array $instructions): self {
+        if(is_null($this->gameInstructions)) {
+            $this->gameInstructions = [];
+        }
+        $this->gameInstructions[] = $instructions;
+        return $this;
     }
 }
