@@ -4,8 +4,9 @@ APP_SECRET="$1"
 MONGODB_URL="$2"
 MONGODB_DB="$3"
 JWT_PASSPHRASE="$4"
+MERCURE_JWT_SECRET="$5"
 
-if [ -z "$APP_SECRET" ] || [ -z "$MONGODB_URL" ] || [ -z "$MONGODB_DB" ] || [ -z "$JWT_PASSPHRASE" ]; then
+if [ -z "$APP_SECRET" ] || [ -z "$MONGODB_URL" ] || [ -z "$MONGODB_DB" ] || [ -z "$JWT_PASSPHRASE" ] || [ -z "$MERCURE_JWT_SECRET" ]; then
     echo "Error: Missing parameters. The script requires APP_SECRET, MONGODB_URL, MONGODB_DB and JWT_PASSPHRASE as named parameters."
     exit 1
 fi
@@ -30,6 +31,9 @@ CORS_ALLOW_ORIGIN='*' \
 JWT_PRIVATE_KEY_PATH=%kernel.project_dir%/config/jwt/private.pem \
 JWT_PUBLIC_KEY_PATH=%kernel.project_dir%/config/jwt/private.pem \
 JWT_PASSPHRASE="$JWT_PASSPHRASE" \
+CADDY_MERCURE_JWT_SECRET="$MERCURE_JWT_SECRET" \
+MERCURE_URL="http://api.game7app.com/.well-known/mercure" \
+MERCURE_PUBLIC_URL="https://api.game7app.com/.well-known/mercure" \
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy -d --build
 
 sudo docker compose exec php sh -c '
