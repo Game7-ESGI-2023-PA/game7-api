@@ -1,10 +1,5 @@
 #!/bin/bash
 
-if [ -z "$(which aws)" ]; then
-    echo "Error: AWS CLI not found. Please install and configure AWS CLI."
-    exit 1
-fi
-
 APP_SECRET="$1"
 MONGODB_URL="$2"
 MONGODB_DB="$3"
