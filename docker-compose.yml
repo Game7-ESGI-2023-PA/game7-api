@@ -51,6 +51,7 @@ services:
 
   game-dispatcher:
     image: shanaziz/esgi-g7-game-dispatcher:main
+    restart: unless-stopped
     ports:
       - "3000:3000"
     volumes:

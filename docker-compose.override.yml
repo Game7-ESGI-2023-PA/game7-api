@@ -30,6 +30,7 @@ services:
   mongodb:
     # In production, you may want to use a managed database service
     image: mongo
+    restart: unless-stopped
     environment:
       - MONGO_INITDB_DATABASE=user
       - MONGO_INITDB_ROOT_USERNAME=admin
