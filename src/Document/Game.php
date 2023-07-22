@@ -87,7 +87,7 @@ class Game
     private int $minPlayers;
 
     #[ODM\Field(type: 'hash')]
-    #[Groups([self::READ, self::WRITE])]
+    #[Groups([self::READ, self::WRITE, GameLobby::READ])]
     private ?array $args = null;
 
     #[Groups([self::READ, self::WRITE])]
