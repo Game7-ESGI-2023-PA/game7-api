@@ -43,7 +43,6 @@ readonly class InitGameProcessor implements ProcessorInterface
             throw new GameLobbyException("Game already started ".$lobbyId);
         }
 
-        dd($gameArgs);
         try {
             $gameState = $this->gameDispatcher->queryGameEngine(
                 $gameArgs,
