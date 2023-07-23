@@ -17,9 +17,17 @@ services:
       retries: 3
       start_period: 30s
     environment:
-      MONGODB_URL: ${MONGODB_URL:-mongodb://admin:password@mongodb:27017}
-      MONGODB_DB: ${MONGODB_DB:-game7}
-      
+#      MONGODB_URL: ${MONGODB_URL:-mongodb://admin:password@mongodb:27017}
+#      MONGODB_DB: ${MONGODB_DB:-game7}
+      APP_SECRET: ${APP_SECRET}
+      MONGODB_URL: ${MONGODB_URL}
+      CORS_ALLOW_ORIGIN: "${CORS_ALLOW_ORIGIN}"
+      MERCURE_URL: ${MERCURE_URL}
+      MERCURE_PUBLIC_URL: ${MERCURE_PUBLIC_URL}
+      MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET}
+      APP_ENV: ${APP_ENV}
+  
+  
   caddy:
     build:
       context: .
@@ -27,9 +35,12 @@ services:
     depends_on:
       - php
     environment:
-      SERVER_NAME: ${SERVER_NAME:-localhost, caddy:80, }
+#      SERVER_NAME: ${SERVER_NAME:-localhost, caddy:80, }
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      SERVER_NAME: 'localhost, api.game7app.com, 54.174.176.86, caddy:80'
+      
+      
     restart: unless-stopped
     volumes:
       - php_socket:/var/run/php
