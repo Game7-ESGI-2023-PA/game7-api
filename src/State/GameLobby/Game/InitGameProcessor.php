@@ -61,7 +61,6 @@ readonly class InitGameProcessor implements ProcessorInterface
                 $lobby->setLobbyGamingData(new LobbyGamingData($gameArgs, [$gameState]));
                 $lobby->setStatus('playing');
             }
-            dd($lobby);
             return $this->processor->process($lobby, $operation, $uriVariables, $context);
         } catch (Exception|DecodingExceptionInterface|TransportExceptionInterface $e) {
             throw new GameInitException("An error occurred while starting the game :".$e->getMessage());
