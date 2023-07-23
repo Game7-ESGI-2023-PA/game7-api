@@ -196,8 +196,9 @@ class GameLobby
         return $this->lobbyGamingData;
     }
 
-    public function setLobbyGamingData(?LobbyGamingData $lobbyGamingData): void
+    public function setLobbyGamingData(?LobbyGamingData $lobbyGamingData): self
     {
         $this->lobbyGamingData = $lobbyGamingData;
+        return $this;
     }
 }
