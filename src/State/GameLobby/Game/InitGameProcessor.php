@@ -58,7 +58,10 @@ readonly class InitGameProcessor implements ProcessorInterface
             );
 
             if (!is_null($gameState)) { // TODO: handle init error
-                $lobby->setLobbyGamingData(new LobbyGamingData($gameArgs, [$gameState]));
+                $gamingData = new LobbyGamingData();
+                $gamingData->setGameInitArgs($gameArgs);
+                $gamingData->setGameState([$gameState]);
+                $lobby->setLobbyGamingData($gamingData);
                 $lobby->setStatus('playing');
             }
             return $this->processor->process($lobby, $operation, $uriVariables, $context);

@@ -10,21 +10,15 @@ class LobbyGamingData
 {
     #[Groups([GameLobby::READ, GameLobby::INIT_GAME])]
     #[ODM\field(type: 'hash')]
-    private ?array $gameInitArgs = null;
+    private ?array $gameInitArgs = [];
 
     #[Groups([GameLobby::READ])]
     #[ODM\field(type: 'hash')]
-    private ?array $gameInstructions = null;
+    private ?array $gameInstructions = [];
 
     #[Groups([GameLobby::READ])]
     #[ODM\field(type: 'hash')]
-    private ?array $gameState = null;
-
-    public function __construct(?array $gameInitArgs, ?array $gameState)
-    {
-        $this->gameInitArgs = $gameInitArgs;
-        $this->gameState = $gameState;
-    }
+    private ?array $gameState = [];
 
 
     public function getGameState(): ?array
