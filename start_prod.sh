@@ -64,7 +64,7 @@ JWT_PASSPHRASE="d2f1a67836debcee23ae3f5b24b499cac984b95908e8a2f955592d90b9236994
 CADDY_MERCURE_JWT_SECRET="!ChangeThisMercureHubJWTSecretKey!" \
 MERCURE_URL="http://caddy/.well-known/mercure" \
 MERCURE_PUBLIC_URL="https://api.game7app.com/.well-known/mercure" \
-docker compose -f docker-compose.yml up php caddy game-dispatcher -d --build
+docker compose up php caddy game-dispatcher -d --build
 
 docker compose exec php sh -c '
 	set -e
