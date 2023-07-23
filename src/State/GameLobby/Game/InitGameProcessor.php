@@ -29,6 +29,12 @@ readonly class InitGameProcessor implements ProcessorInterface
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
+        $gameArgs = $data->getArgs();
+
+        if (!is_array($gameArgs)) {
+            throw new GameInitException("Invalid game arguments provided.");
+        }
+
         $lobbyId = $uriVariables['id'];
         $gameArgs = $data->getArgs();
         $repository = $this->documentManager->getRepository(GameLobby::class);
