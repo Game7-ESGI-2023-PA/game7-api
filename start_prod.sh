@@ -23,7 +23,7 @@ sudo docker compose stop
 sudo docker compose rm
 
 sudo \
-APP_ENV='dev' \
+APP_ENV='prod' \
 APP_SECRET="$APP_SECRET" \
 MONGODB_URL="$MONGODB_URL" \
 MONGODB_DB="$MONGODB_DB" \
