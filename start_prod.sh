@@ -32,9 +32,9 @@ JWT_PRIVATE_KEY_PATH=%kernel.project_dir%/config/jwt/private.pem \
 JWT_PUBLIC_KEY_PATH=%kernel.project_dir%/config/jwt/private.pem \
 JWT_PASSPHRASE="$JWT_PASSPHRASE" \
 CADDY_MERCURE_JWT_SECRET="$MERCURE_JWT_SECRET" \
-MERCURE_URL="http://api.game7app.com/.well-known/mercure" \
+MERCURE_URL="http://caddy/.well-known/mercure" \
 MERCURE_PUBLIC_URL="https://api.game7app.com/.well-known/mercure" \
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy -d --build
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up php caddy game-dispatcher -d --build
 
 sudo docker compose exec php sh -c '
 	set -e
