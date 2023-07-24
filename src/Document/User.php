@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
 use App\State\User\CurrentUserProvider;
 use App\State\User\UserPasswordHasher;
+use App\Validator\UniqueUser;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -60,6 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     ])]
     #[ODM\Field]
     #[ODM\Index(unique: true)]
+    #[UniqueUser]
     private ?string $email = null;
 
     #[Assert\NotBlank]
@@ -75,6 +77,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     ])]
     #[ODM\Field]
     #[ODM\Index(unique: true)]
+    #[UniqueUser]
     private ?string $nickname = null;
 
     #[ODM\Field]
