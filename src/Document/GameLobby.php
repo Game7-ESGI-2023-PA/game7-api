@@ -70,6 +70,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     mercure: true // TODO: only players can subscribe
 )]
 #[ODM\Document(repositoryClass: GameLobbyRepository::class)]
+#[ODM\HasLifecycleCallbacks]
 class GameLobby
 {
     public const STATUS = ['pending', 'playing', 'done'];
@@ -101,6 +102,14 @@ class GameLobby
     )]
     #[Groups([Game::READ, self::READ])]
     private ?ArrayCollection $players = null;
+
+    #[Groups([self::READ, Game::READ])]
+    #[ODM\Field(type: 'date_immutable')]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[Groups([self::READ, Game::READ])]
+    #[ODM\Field(type: 'date_immutable')]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     #[Groups([self::READ])]
     #[ODM\EmbedMany(targetDocument: LobbyMessage::class)]
@@ -219,4 +228,42 @@ class GameLobby
     public function setIsPublic(?bool $isPublic): void {
         $this->isPublic = $isPublic;
     }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    #[ODM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->setCreatedAt(new \DateTimeImmutable());
+        $this->setUpdatedAt(new \DateTimeImmutable());
+    }
+
+    #[ODM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->setUpdatedAt(new \DateTimeImmutable());
+    }
+
 }
