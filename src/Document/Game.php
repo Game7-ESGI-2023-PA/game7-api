@@ -194,9 +194,14 @@ class Game
         $this->args = $args;
     }
 
-    public function getLobbies(): ArrayCollection
+    public function getLobbies(): array
     {
-        return $this->lobbies;
+        $lobbies = $this->lobbies->filter(
+            function($lobby) {
+                return $lobby->getIsPublic();
+             }
+        );
+        return $lobbies->getValues();
     }
 
     public function addLobby(GameLobby $lobby): self
