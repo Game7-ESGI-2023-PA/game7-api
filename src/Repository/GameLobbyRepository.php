@@ -4,23 +4,20 @@ namespace App\Repository;
 
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class GameLobbyRepository extends DocumentRepository
 {
     /**
      * @throws MongoDBException
      */
-    public function getAllMyLobbies($email) {
+    public function getAllMyLobbies(UserInterface $me) {
         $queryBuilder = $this->createQueryBuilder();
 
         return $queryBuilder
             ->addOr(
-                $queryBuilder->expr()->field('master')->references($email)
-            )
-            ->addOr(
-                $queryBuilder->expr()->field('players')->all([
-                    ['\$email' => $email->getUserIdentifier()]
-                ])
+                $queryBuilder->expr()->field('master')->references($me),
+                $queryBuilder->expr()->field('players')->references($me)
             )
             ->getQuery()
             ->execute();

@@ -28,9 +28,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 // TODO: start the game (only master) -> send information to game dispatcher
 #[ApiResource(
     operations: [
-        new Get(), // TODO: add rbac using voters
+        new Get(),
+        // TODO: only friends or public
         new GetCollection(
-            uriTemplate: 'me/game_lobbies',
+            uriTemplate: 'game_lobbies/user/{id}', // Si je suis dans ces amis ou si c'est moi
             provider: MyGameLobbyProvider::class,
         ),
         new Post(
