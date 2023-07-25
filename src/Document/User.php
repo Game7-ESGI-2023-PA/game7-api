@@ -87,6 +87,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups([self::CREATE, self::UPDATE])]
     private ?string $plainPassword = null;
 
+    #[Groups([self::READ])]
+    #[ODM\Field]
+    private ?int $xp = 0;
+
     #[ODM\Field(type: 'collection')]
     private array $roles = [];
 
@@ -161,6 +165,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = $roles;
 
         return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getXp(): ?int
+    {
+        return $this->xp;
+    }
+
+    /**
+     * @param int|null $xp
+     */
+    public function setXp(?int $xp): void
+    {
+        $this->xp = $xp;
+    }
+
+    public function addXp(?int $xp): void {
+        $this->xp += $xp;
     }
 
     /**

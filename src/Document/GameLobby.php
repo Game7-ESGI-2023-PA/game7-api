@@ -17,6 +17,7 @@ use App\Repository\GameLobbyRepository;
 use App\State\GameLobby\Game\InitGameProcessor;
 use App\State\GameLobby\Game\GameCurrentStepProcessor;
 use App\State\GameLobby\GameLobbyCreationProcessor;
+use App\State\GameLobby\GameLobbyEndProcessor;
 use App\State\GameLobby\GameLobbyJoinProcessor;
 use App\State\GameLobby\GameLobbySendMessageProcessor;
 use App\State\GameLobby\MyGameLobbyProvider;
@@ -64,7 +65,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
             denormalizationContext: ['groups' => [self::NEXT_STEP]],
             input: NextStepGameDto::class,
             processor: GameCurrentStepProcessor::class,
+        ),
+        new Put(
+            uriTemplate: '/game_lobbies/{id}/end',
+            exceptionToStatus: [GameLobbyException::class => 400],
+            denormalizationContext: ['groups' => self::END_GAME],
+            processor: GameLobbyEndProcessor::class,
         )
+//        new Put(
+//            uriTemplate: '/game_lobbies/{id}/update_peers',
+//            denormalizationContext: ['groups' => [self::UPDATE_PEERS]],
+//        )
     ],
     normalizationContext: ['groups' => [self::READ]],
     denormalizationContext: ['groups' => [self::CREATE]],
@@ -74,13 +85,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ODM\HasLifecycleCallbacks]
 class GameLobby
 {
-    public const STATUS = ['pending', 'playing', 'done'];
+    public const STATUS = ['pending', 'playing', 'over'];
     public const READ = 'gameLobby:read';
     public const CREATE = 'gameLobby:create';
     public const WRITE_MESSAGE = 'gameLobby:write:message';
     public const JOIN = 'gameLobby:join';
     public const INIT_GAME = 'gameLobby:init:game';
     public const NEXT_STEP = 'gameLobby:next:step';
+    public const UPDATE_PEERS = 'gameLobby:peers';
+    public const END_GAME = 'gameLobby:end';
 
     #[ODM\Id]
     #[Groups([Game::READ, self::READ])]
@@ -125,6 +138,13 @@ class GameLobby
     #[ODM\EmbedOne(targetDocument: LobbyGamingData::class)]
     private ?LobbyGamingData $lobbyGamingData = null;
 
+    #[Groups([self::READ, self::END_GAME])]
+    #[ODM\ReferenceOne(targetDocument: User::class)]
+    #[ApiProperty(
+        example: '/api/users/{userId}',
+    )]
+    private ?User $winner;
+
     #[ODM\Field]
     #[Groups([self::READ, self::CREATE])]
     private ?bool $isPublic = false;
@@ -133,6 +153,7 @@ class GameLobby
     {
         $this->players = new ArrayCollection();
         $this->messages = new ArrayCollection();
+//        $this->lobbyPeers = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -183,6 +204,23 @@ class GameLobby
 
         return $this;
     }
+
+//    public function getLobbyPeers(): ArrayCollection
+//    {
+//        return $this->lobbyPeers;
+//    }
+//
+//    public function addLobbyPeer(GameLobbyPeer $lobbyPeer): self
+//    {
+//        $this->lobbyPeers[] = $lobbyPeer;
+//        return $this;
+//    }
+//
+//    public function removeLobbyPeer(GameLobbyPeer $lobbyPeer): self
+//    {
+//        $this->lobbyPeers->removeElement($lobbyPeer);
+//        return $this;
+//    }
 
     public function getMessages(): ArrayCollection
     {
@@ -252,6 +290,22 @@ class GameLobby
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getWinner(): ?User
+    {
+        return $this->winner;
+    }
+
+    /**
+     * @param User|null $winner
+     */
+    public function setWinner(?User $winner): void
+    {
+        $this->winner = $winner;
     }
 
     #[ODM\PrePersist]
