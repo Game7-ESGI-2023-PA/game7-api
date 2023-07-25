@@ -90,6 +90,10 @@ class Game
     #[Groups([self::READ, self::WRITE, GameLobby::READ])]
     private ?array $args = null;
 
+    #[ODM\Field]
+    #[Groups([self::READ, self::WRITE, GameLobby::READ])]
+    private ?int $winXp = 10;
+
     #[Groups([self::READ, self::WRITE])]
     #[ODM\ReferenceMany(storeAs: 'id', targetDocument: GameLobby::class)]
     private ArrayCollection $lobbies;
@@ -218,5 +222,15 @@ class Game
         $this->lobbies->removeElement($lobby);
 
         return $this;
+    }
+
+    public function getWinXp(): ?int
+    {
+        return $this->winXp;
+    }
+
+    public function setWinXp(?int $winXp): void
+    {
+        $this->winXp = $winXp;
     }
 }

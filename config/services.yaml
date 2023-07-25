@@ -53,5 +53,9 @@ services:
     App\State\GameLobby\Game\GameCurrentStepProcessor:
         bind:
             $processor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
+            
+    App\State\GameLobby\GameLobbyEndProcessor:
+        bind:
+            $processor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

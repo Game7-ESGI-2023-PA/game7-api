@@ -17,6 +17,7 @@ use App\Repository\GameLobbyRepository;
 use App\State\GameLobby\Game\InitGameProcessor;
 use App\State\GameLobby\Game\GameCurrentStepProcessor;
 use App\State\GameLobby\GameLobbyCreationProcessor;
+use App\State\GameLobby\GameLobbyEndProcessor;
 use App\State\GameLobby\GameLobbyJoinProcessor;
 use App\State\GameLobby\GameLobbySendMessageProcessor;
 use App\State\GameLobby\MyGameLobbyProvider;
@@ -64,7 +65,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             denormalizationContext: ['groups' => [self::NEXT_STEP]],
             input: NextStepGameDto::class,
             processor: GameCurrentStepProcessor::class,
-        )
+        ),
     ],
     normalizationContext: ['groups' => [self::READ]],
     denormalizationContext: ['groups' => [self::CREATE]],
@@ -74,7 +75,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ODM\HasLifecycleCallbacks]
 class GameLobby
 {
-    public const STATUS = ['pending', 'playing', 'done'];
+    public const STATUS = ['pending', 'playing', 'over'];
     public const READ = 'gameLobby:read';
     public const CREATE = 'gameLobby:create';
     public const WRITE_MESSAGE = 'gameLobby:write:message';
@@ -133,6 +134,7 @@ class GameLobby
     {
         $this->players = new ArrayCollection();
         $this->messages = new ArrayCollection();
+//        $this->lobbyPeers = new ArrayCollection();
     }
 
     public function getId(): ?string
