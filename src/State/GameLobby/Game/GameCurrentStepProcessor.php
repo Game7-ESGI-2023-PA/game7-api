@@ -21,6 +21,9 @@ class GameCurrentStepProcessor implements ProcessorInterface
         private ProcessorInterface  $processor,
     ){}
 
+    /**
+     * @throws GameLobbyException
+     */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         $lobbyId = $uriVariables['id'];
@@ -53,6 +56,19 @@ class GameCurrentStepProcessor implements ProcessorInterface
             );
             $lobby->getLobbyGamingData()->addGameInstructions($newActions);
             $lobby->getLobbyGamingData()->addGameState($gameState);
+            if (isset($gameState['game_state']['game_over']) && $gameState['game_state']['game_over'] === true) {
+                $lobby->setStatus('over');
+                if (is_array($gameState['game_state']['scores'])) {
+                    $max = max($gameState['game_state']['scores']);
+                    $maxIndex = array_keys($gameState['game_state']['scores'], $max);
+                    foreach ($maxIndex as $index) {
+                        $player = $lobby->getPlayers()->get($index);
+                        $player->addXp($lobby->getGame()->getWinXp());
+                        $this->documentManager->persist($player);
+                    }
+                    $this->documentManager->flush();
+                }
+            }
             return $this->processor->process($lobby, $operation, $uriVariables, $context);
         } catch (Exception|DecodingExceptionInterface|TransportExceptionInterface $e) {
             throw new GameLobbyException("An error occurred while starting the game :".$e->getMessage());

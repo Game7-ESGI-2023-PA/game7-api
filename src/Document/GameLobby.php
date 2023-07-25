@@ -66,16 +66,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             input: NextStepGameDto::class,
             processor: GameCurrentStepProcessor::class,
         ),
-        new Put(
-            uriTemplate: '/game_lobbies/{id}/end',
-            exceptionToStatus: [GameLobbyException::class => 400],
-            denormalizationContext: ['groups' => self::END_GAME],
-            processor: GameLobbyEndProcessor::class,
-        )
-//        new Put(
-//            uriTemplate: '/game_lobbies/{id}/update_peers',
-//            denormalizationContext: ['groups' => [self::UPDATE_PEERS]],
-//        )
     ],
     normalizationContext: ['groups' => [self::READ]],
     denormalizationContext: ['groups' => [self::CREATE]],
@@ -92,8 +82,6 @@ class GameLobby
     public const JOIN = 'gameLobby:join';
     public const INIT_GAME = 'gameLobby:init:game';
     public const NEXT_STEP = 'gameLobby:next:step';
-    public const UPDATE_PEERS = 'gameLobby:peers';
-    public const END_GAME = 'gameLobby:end';
 
     #[ODM\Id]
     #[Groups([Game::READ, self::READ])]
@@ -137,13 +125,6 @@ class GameLobby
     #[Groups([self::READ])]
     #[ODM\EmbedOne(targetDocument: LobbyGamingData::class)]
     private ?LobbyGamingData $lobbyGamingData = null;
-
-    #[Groups([self::READ, self::END_GAME])]
-    #[ODM\ReferenceOne(targetDocument: User::class)]
-    #[ApiProperty(
-        example: '/api/users/{userId}',
-    )]
-    private ?User $winner;
 
     #[ODM\Field]
     #[Groups([self::READ, self::CREATE])]
@@ -204,23 +185,6 @@ class GameLobby
 
         return $this;
     }
-
-//    public function getLobbyPeers(): ArrayCollection
-//    {
-//        return $this->lobbyPeers;
-//    }
-//
-//    public function addLobbyPeer(GameLobbyPeer $lobbyPeer): self
-//    {
-//        $this->lobbyPeers[] = $lobbyPeer;
-//        return $this;
-//    }
-//
-//    public function removeLobbyPeer(GameLobbyPeer $lobbyPeer): self
-//    {
-//        $this->lobbyPeers->removeElement($lobbyPeer);
-//        return $this;
-//    }
 
     public function getMessages(): ArrayCollection
     {
@@ -290,22 +254,6 @@ class GameLobby
         $this->updatedAt = $updatedAt;
 
         return $this;
-    }
-
-    /**
-     * @return User|null
-     */
-    public function getWinner(): ?User
-    {
-        return $this->winner;
-    }
-
-    /**
-     * @param User|null $winner
-     */
-    public function setWinner(?User $winner): void
-    {
-        $this->winner = $winner;
     }
 
     #[ODM\PrePersist]
