@@ -40,3 +40,14 @@ docker compose exec php sh -c 'php bin/console doctrine:mongodb:schema:create --
 - use the following command to fix php code standards:
 
 `docker run --init -it --rm -v "$(pwd):/project" -v "$(pwd)/tmp-phpqa:/tmp" -w /project jakzal/phpqa php-cs-fixer fix src`
+
+## Deploiement
+
+```shell
+docker build . -t shanaziz/game7-caddy:latest --target app_caddy
+```
+
+```shell
+docker build . -t shanaziz/game7-php:latest --target app_php
+```
+docker run --env SERVER_NAME="localhost" --env MERCURE_PUBLISHER_JWT_KEY="blabla" --env MERCURE_SUBSCRIBER_JWT_KEY="blabla" -p "127.0.0.1:443:443/TCP" shanaziz/game7-api
