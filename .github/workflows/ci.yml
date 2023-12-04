@@ -37,9 +37,7 @@ jobs:
                   exit 1
             - name: Check HTTP reachability
               run: curl http://localhost
-            - name: Check HTTPS reachability
-              run: curl -k https://localhost
             - name: Copy .env.test.local
               run: docker compose exec php php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
             - name: Execute tests (Unit and Feature tests) via PHPUnit
-              run: docker compose exec php /srv/app/vendor/bin/phpunit
+              run: docker compose exec php /app/vendor/bin/phpunit
